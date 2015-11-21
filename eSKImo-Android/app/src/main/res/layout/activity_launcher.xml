@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Login with Facebook"
-                android:id="@+id/button2"
+                android:id="@+id/btn_facebook"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="15dp" />
 
@@ -84,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Login with Google"
-                android:id="@+id/button3"
+                android:id="@+id/btn_google"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="15dp" />
         </LinearLayout>
