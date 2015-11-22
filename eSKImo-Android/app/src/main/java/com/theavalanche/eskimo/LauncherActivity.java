@@ -41,7 +41,7 @@ public class LauncherActivity extends ActionBarActivity {
             }
         });
         // Login with Facebook
-        loginButton = (LoginButton)findViewById(R.id.login_button);
+        loginButton = (LoginButton)findViewById(R.id.fb_login_button);
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
