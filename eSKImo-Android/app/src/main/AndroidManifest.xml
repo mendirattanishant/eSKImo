@@ -19,6 +19,16 @@
         </activity>
         <activity android:name=".RegisterActivity" >
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="eSKImo"
+            android:theme="@style/Theme.AppCompat.Light" >
+        </activity>
+        <activity
+            android:name=".AddEventActivity"
+            android:label="Add / Edit Event"
+            android:theme="@style/Theme.AppCompat.Light" >
+        </activity>
     </application>
 
 </manifest>
