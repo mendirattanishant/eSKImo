@@ -1,0 +1,18 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=3E:0B:4E:F7:C0:C0:6B:E2:D3:40:EB:3E:CA:2C:9D:C0:D2:5C:FF:2A%3Bcom.theavalanche.eskimo
+
+    You can also add your credentials to an existing key, using this line:
+    3E:0B:4E:F7:C0:C0:6B:E2:D3:40:EB:3E:CA:2C:9D:C0:D2:5C:FF:2A;com.theavalanche.eskimo
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
+        AIzaSyDyqlvy6_rNDzLx_aRLWKoBfR_VHVWPelE
+    </string>
+</resources>
