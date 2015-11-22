@@ -23,7 +23,7 @@ public class LauncherActivity extends ActionBarActivity {
 
     private CallbackManager callbackManager;
     // private TextView info;
-    private LoginButton loginButton;
+    private LoginButton fb_loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +41,9 @@ public class LauncherActivity extends ActionBarActivity {
             }
         });
         // Login with Facebook
-        loginButton = (LoginButton)findViewById(R.id.fb_login_button);
+        fb_loginButton = (LoginButton)findViewById(R.id.fb_login_button);
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        fb_loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
             @Override
             public void onSuccess(LoginResult loginResult) {
