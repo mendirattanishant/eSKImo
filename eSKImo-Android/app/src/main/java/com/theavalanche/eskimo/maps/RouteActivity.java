@@ -1,6 +1,7 @@
 package com.theavalanche.eskimo.maps;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -93,8 +94,8 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         // save the state
         updateValuesFromBundle(savedInstanceState);
         buildGoogleApiClient();
+        mExitUpdatesButton.setEnabled(true);
     }
-
 
     private void updateValuesFromBundle(Bundle savedInstanceState) {
         Log.i(TAG, "Updating values from bundle");
@@ -151,6 +152,10 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
 
     public void saveUpdatesButtonHandler(View view) {
         Toast.makeText(this, "Saving route details", Toast.LENGTH_SHORT).show();
+        // save and go tto profile page may be?
+        Intent i = new Intent(this,RouteDetailsActivity.class);
+        startActivity(i);
+        finish();
     }
 
     public void exitUpdatesButtonHandler(View view) {
@@ -159,7 +164,9 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-
+                        Intent i = new Intent(RouteActivity.this,RouteDetailsActivity.class);
+                        startActivity(i);
+                        finish();
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -189,7 +196,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
             mStartUpdatesButton.setEnabled(true);
             mStopUpdatesButton.setEnabled(false);
             mSaveUpdatesButton.setEnabled(false);
-            mExitUpdatesButton.setEnabled(false);
+            mExitUpdatesButton.setEnabled(true);
         }
     }
 
