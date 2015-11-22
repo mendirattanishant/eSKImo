@@ -1,9 +1,12 @@
 package com.theavalanche.eskimo.maps;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
@@ -22,11 +25,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.maps.android.PolyUtil;
 import com.theavalanche.eskimo.R;
 
 import java.text.DateFormat;
@@ -67,6 +72,8 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     protected String mLastUpdateTimeLabel;
     protected Boolean mRequestingLocationUpdates;
     protected String mLastUpdateTime;
+    private List<LatLng> routePoints = new ArrayList<LatLng>();
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -262,7 +269,32 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
+        routePoints.add(new LatLng(location.getLatitude(),location.getLongitude()));
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        googleMap.addPolyline(new PolylineOptions()
+                .addAll(routePoints)
+                .color(Color.RED)
+                .geodesic(true)
+                .width(6));
+
+        // resetting camaera location to hold the map inside viewport.
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (LatLng marker : routePoints) {
+            builder.include(marker);
+        }
+        final LatLngBounds bounds = builder.build();
+        final int padding = 50;
+        googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+
+            @Override
+            public void onCameraChange(CameraPosition arg0) {
+                // Move camera.
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+                // Remove listener to prevent position reset on camera move.
+                googleMap.setOnCameraChangeListener(null);
+            }
+        });
+
         updateUI();
         Toast.makeText(this, getResources().getString(R.string.location_updated_message),
                 Toast.LENGTH_SHORT).show();
@@ -289,31 +321,65 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(final GoogleMap map) {
-        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        List<LatLng> routePoints = PolyUtil.decode(getRouteData());
-        map.addPolyline(new PolylineOptions()
-                .addAll(routePoints)
-                .color(Color.RED)
-                .geodesic(true)
-                .width(6));
+        this.googleMap = map;
+        googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+        // add start location marker.
+        LocationManager locManager;
+        String context = Context.LOCATION_SERVICE;
+        Criteria c = new Criteria();
+        c.setAccuracy(Criteria.ACCURACY_FINE);
+        c.setAltitudeRequired(false);
+        c.setBearingRequired(false);
+        c.setCostAllowed(true);
+        c.setPowerRequirement(Criteria.POWER_LOW);
+
+        locManager = (LocationManager) getSystemService(context);
+        String provider = locManager.getBestProvider(c, true);
+        Location loc = locManager.getLastKnownLocation(provider);
+
+        LatLng currentPosition = updateWithNewLocation(loc);
+        Marker startLocation = googleMap.addMarker(new MarkerOptions()
+                .position(currentPosition)
+                .title("Start Location")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 17));
+        routePoints.add(startLocation.getPosition());
 
         // check for wifi here else this will crash !!
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (LatLng marker : routePoints) {
-            builder.include(marker);
-        }
-        final LatLngBounds bounds = builder.build();
-        final int padding = 50;
-        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+//        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//        for (LatLng marker : routePoints) {
+//            builder.include(marker);
+//        }
+//        final LatLngBounds bounds = builder.build();
+//        final int padding = 50;
+//        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+//
+//            @Override
+//            public void onCameraChange(CameraPosition arg0) {
+//                // Move camera.
+//                map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+//                // Remove listener to prevent position reset on camera move.
+//                map.setOnCameraChangeListener(null);
+//            }
+//        });
+    }
 
-            @Override
-            public void onCameraChange(CameraPosition arg0) {
-                // Move camera.
-                map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-                // Remove listener to prevent position reset on camera move.
-                map.setOnCameraChangeListener(null);
-            }
-        });
+    // Location Received
+    private LatLng updateWithNewLocation(Location loc) {
+        String latLonString;
+        LatLng currentLocation = null;
+        if (loc != null) {
+            double lat = loc.getLatitude();
+            double lon = loc.getLongitude();
+
+            currentLocation = new LatLng(lat, lon);
+
+        } else {
+            latLonString = "No location found";
+        }
+
+        return currentLocation;
     }
 
     private String getRouteData() {
