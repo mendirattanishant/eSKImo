@@ -1,5 +1,6 @@
 package com.theavalanche.eskimo;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -30,6 +31,15 @@ public class AddEventActivity extends ActionBarActivity {
             userViews.add(view);
             userListView.addView(view);
         }
+
+        findViewById(R.id.bStartDate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dialog dialog = new Dialog(AddEventActivity.this);
+                dialog.setContentView(R.layout.date_time_dialog);
+                dialog.show();
+            }
+        });
     }
 
     @Override
