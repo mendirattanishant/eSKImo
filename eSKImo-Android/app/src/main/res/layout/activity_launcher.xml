@@ -72,13 +72,13 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="15dp" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Login with Facebook"
-                android:id="@+id/btn_facebook"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15dp" />
+            <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            />
+
 
             <Button
                 android:layout_width="match_parent"
