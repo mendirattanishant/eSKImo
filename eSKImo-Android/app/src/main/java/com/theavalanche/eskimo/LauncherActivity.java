@@ -2,16 +2,10 @@ package com.theavalanche.eskimo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import com.theavalanche.eskimo.maps.RouteActivity;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -20,7 +14,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-public class LauncherActivity extends ActionBarActivity {
+public class LauncherActivity extends Activity {
 
     private CallbackManager callbackManager;
     // private TextView info;

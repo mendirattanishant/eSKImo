@@ -12,10 +12,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.theavalanche.eskimo.AddEventActivity;
+import com.theavalanche.eskimo.EventDetailsActivity;
 import com.theavalanche.eskimo.R;
 import com.theavalanche.eskimo.adapters.EventsAdapter;
 import com.theavalanche.eskimo.models.Event;
@@ -52,6 +54,14 @@ public class EventsFragment extends Fragment{
         adapter.addEvents(events);
 
         setHasOptionsMenu(true);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

@@ -19,4 +19,5 @@
     <string name="location_updated_message">Location updated</string>
     <string name="title_activity_route_details">Route Details</string>
     <string name="facebook_app_id">972313096147978</string>
+    <string name="title_activity_event_details">EventDetailsActivity</string>
 </resources>
