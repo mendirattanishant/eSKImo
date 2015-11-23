@@ -75,8 +75,6 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     private Route route;
     private GoogleMap googleMap;
     private Chronometer timer;
-    private long baseTime;
-    private long stopTime;
     private long elapsedTime;
 
     @Override
@@ -150,7 +148,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
             setButtonsEnabledState();
             startLocationUpdates();
             // this should be set only once and not on restart after pause.
-            if(route.getStartTime() != null) {
+            if(route.getStartTime() == null) {
                 route.setStartTime(new Date());
             }
             timer.setBase(SystemClock.elapsedRealtime() + elapsedTime);
