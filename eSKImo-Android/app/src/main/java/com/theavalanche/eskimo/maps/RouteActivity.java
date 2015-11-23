@@ -8,11 +8,13 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,9 +37,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.theavalanche.eskimo.R;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class RouteActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -74,6 +74,10 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     protected String mLastUpdateTime;
     private Route route;
     private GoogleMap googleMap;
+    private Chronometer timer;
+    private long baseTime;
+    private long stopTime;
+    private long elapsedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +91,9 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         mStopUpdatesButton = (Button) findViewById(R.id.stop_updates_button);
         mSaveUpdatesButton = (Button) findViewById(R.id.save_updates_button);
         mExitUpdatesButton = (Button) findViewById(R.id.exit_updates_button);
-        mLatitudeTextView = (TextView) findViewById(R.id.latitude_text);
-        mLongitudeTextView = (TextView) findViewById(R.id.longitude_text);
         mLastUpdateTimeTextView = (TextView) findViewById(R.id.last_update_time_text);
-
-        mLatitudeLabel = getResources().getString(R.string.latitude_label);
-        mLongitudeLabel = getResources().getString(R.string.longitude_label);
         mLastUpdateTimeLabel = getResources().getString(R.string.last_update_time_label);
+        timer = (Chronometer) findViewById(R.id.chronometer);
 
         mRequestingLocationUpdates = false;
         mLastUpdateTime = "";
@@ -149,6 +149,12 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
             mRequestingLocationUpdates = true;
             setButtonsEnabledState();
             startLocationUpdates();
+            // this should be set only once and not on restart after pause.
+            if(route.getStartTime() != null) {
+                route.setStartTime(new Date());
+            }
+            timer.setBase(SystemClock.elapsedRealtime() + elapsedTime);
+            timer.start();
         }
     }
 
@@ -157,6 +163,10 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
             mRequestingLocationUpdates = false;
             setButtonsEnabledState();
             stopLocationUpdates();
+            // http://stackoverflow.com/questions/5594877/android-chronometer-pause
+            elapsedTime = timer.getBase() - SystemClock.elapsedRealtime();
+            timer.stop();
+            route.setEndTime(new Date());
         }
     }
 
@@ -210,16 +220,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         }
     }
 
-    private static List<String> latitudes = new ArrayList<String>();
-    private static List<String> longitudes = new ArrayList<String>();
-
     private void updateUI() {
-        latitudes.add(Double.toString(mCurrentLocation.getLatitude()));
-        longitudes.add(Double.toString(mCurrentLocation.getLongitude()));
-        mLatitudeTextView.setText(String.format("%s: %s", mLatitudeLabel,
-                latitudes.toString()));
-        mLongitudeTextView.setText(String.format("%s: %s", mLongitudeLabel,
-                longitudes.toString()));
         mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel,
                 mLastUpdateTime));
     }
