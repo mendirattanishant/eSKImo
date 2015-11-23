@@ -72,7 +72,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     protected String mLastUpdateTimeLabel;
     protected Boolean mRequestingLocationUpdates;
     protected String mLastUpdateTime;
-    private List<LatLng> routePoints = new ArrayList<LatLng>();
+    private Route route;
     private GoogleMap googleMap;
 
     @Override
@@ -102,6 +102,9 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         updateValuesFromBundle(savedInstanceState);
         buildGoogleApiClient();
         mExitUpdatesButton.setEnabled(true);
+        route = new Route();
+        //TODO:  add user info to route here.
+
     }
 
     private void updateValuesFromBundle(Bundle savedInstanceState) {
@@ -269,17 +272,17 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
-        routePoints.add(new LatLng(location.getLatitude(),location.getLongitude()));
+        route.addLocaiton(new com.theavalanche.eskimo.maps.Location(location));
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         googleMap.addPolyline(new PolylineOptions()
-                .addAll(routePoints)
+                .addAll(route.getLatLngs())
                 .color(Color.RED)
                 .geodesic(true)
                 .width(6));
 
         // resetting camaera location to hold the map inside viewport.
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (LatLng marker : routePoints) {
+        for (LatLng marker : route.getLatLngs()) {
             builder.include(marker);
         }
         final LatLngBounds bounds = builder.build();
@@ -344,25 +347,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
                 .title("Start Location")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 17));
-        routePoints.add(startLocation.getPosition());
-
-        // check for wifi here else this will crash !!
-//        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//        for (LatLng marker : routePoints) {
-//            builder.include(marker);
-//        }
-//        final LatLngBounds bounds = builder.build();
-//        final int padding = 50;
-//        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-//
-//            @Override
-//            public void onCameraChange(CameraPosition arg0) {
-//                // Move camera.
-//                map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-//                // Remove listener to prevent position reset on camera move.
-//                map.setOnCameraChangeListener(null);
-//            }
-//        });
+        route.setStartLocation(new com.theavalanche.eskimo.maps.Location(loc));
     }
 
     // Location Received
@@ -380,9 +365,5 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         }
 
         return currentLocation;
-    }
-
-    private String getRouteData() {
-        return "ktwnE|}ypUYd@i@fAlAfApAhAy@|BwAfE{BnG_ArCEh@Y`Au@vBGPIXwBlG}B~Gm@tAw@xBuAfEsDpKi@tA{AjEmAlDg@rAGj@@~A?fA?dBc@Ku@EyG?uBBwA@kE?{@DaB@uA@AnC?fE@pF@tN@vEIxAIx@YpAEv@?~D@|L@vNBhL@zK?nEAxAAjI?xEG`FBbI?tEAjE@jE@jBLfJDjGFdBCjAEp@Mt@yAnGyC`LuAbF[tAy@bDOdBIfC_AhOWfEu@|DkB~JyBbLw@dEC`B@`CAbDKpPWvZGhMGfDKdNe@bx@EhIArAMbBc@bEsAtN_@tGs@tMWzE[fFyA`Wi@jJHzBHvCDdD@rK@jLBdTC|Q?bFAlAvA?|RF`BJ@pD?tK@jEAlE?pE@|DH~BV`DZtCr@jDhBfInAhFpA~Fz@|Dr@nCVx@`AxBvErJdClFhB|D?LJBnB~D|@lBrG|M~CxGpEfJbCxE|@pBvD~HfBnDdBvDfChF`DzHfCzGh@zAr@dBjBdFvBbGvAvDxEfMrJvVhAvCBFd@vA`AbC`CbGpA~DdAzBhDzGhEvK~L`[lDbJd@tAd@nABb@O\\[fAgBrFtAn@`@d@NZPz@VxA\\tBX`BRf@JJRpBn@fFn@hFz@fGp@jE`@~B~BvM~AjJtBvLnCvOhAdGPv@XrA^jAzAlDr@xAvCrElF`HdHfJ`IdKX`@BTBL^p@`@n@Tf@f@`BJj@N|AJx@N\\NV@Lf@h@~AhCd@r@FJq@z@aCrCoEtFoDpEW^d@r@z@fAt@~@fA|AnAzAnBhC|BtCbAxAvCkD`EcF|CuDVYpDuExFaH`BoBj@[l@bAh@z@p@dAtC|EdCzDnArBbA|A{DrDeJvJgAlAgBlB}A`BETBXf@t@hAzADJcBlB{B`CKOa@m@SYtC}CDG";
     }
 }
