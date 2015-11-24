@@ -74,7 +74,11 @@
         <activity
             android:name=".EventDetailsActivity"
             android:label="Set this dynamically to event name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".UserDetailsActivity"
+            android:label="Dynamically set to user name" >
         </activity>
     </application>
 

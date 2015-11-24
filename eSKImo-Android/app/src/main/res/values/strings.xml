@@ -22,4 +22,7 @@
     <string name="facebook_app_id">972313096147978</string>
     <string name="title_activity_event_details">EventDetailsActivity</string>
     <string name="refresh_session_details">Refresh</string>
+    <string name="title_activity_user_details">UserDetailsActivity</string>
+    <drawable name="transparent">#00ffffff</drawable>
+    <drawable name="clicked">#56acba</drawable>
 </resources>
