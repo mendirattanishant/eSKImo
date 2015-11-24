@@ -15,7 +15,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ski_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
@@ -66,6 +66,10 @@
         <activity
             android:name=".maps.RouteDetailsActivity"
             android:label="@string/title_activity_route_details" >
+        </activity>
+        <activity
+            android:name=".maps.RouteGroupActivity"
+            android:label="@string/title_activity_route_group" >
         </activity>
         <activity
             android:name=".EventDetailsActivity"

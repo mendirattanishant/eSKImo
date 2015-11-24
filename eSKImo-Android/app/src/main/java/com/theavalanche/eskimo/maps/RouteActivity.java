@@ -171,7 +171,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     public void saveUpdatesButtonHandler(View view) {
         Toast.makeText(this, "Saving route details", Toast.LENGTH_SHORT).show();
         // save and go tto profile page may be?
-        Intent i = new Intent(this,RouteDetailsActivity.class);
+        Intent i = new Intent(this,RouteGroupActivity.class);
         startActivity(i);
         finish();
     }
