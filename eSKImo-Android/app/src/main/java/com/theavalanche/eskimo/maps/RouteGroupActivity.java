@@ -105,6 +105,6 @@ public class RouteGroupActivity extends FragmentActivity implements OnMapReadyCa
     }
 
     private String getRouteData(int mapCount) {
-        return Constants.PATHS[mapCount];
+        return RouteDataHandler.PATHS[mapCount];
     }
 }

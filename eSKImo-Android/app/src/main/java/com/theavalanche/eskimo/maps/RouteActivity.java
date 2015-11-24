@@ -1,12 +1,9 @@
 package com.theavalanche.eskimo.maps;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
@@ -64,11 +61,6 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     protected Button mSaveUpdatesButton;
     protected Button mExitUpdatesButton;
     protected TextView mLastUpdateTimeTextView;
-    protected TextView mLatitudeTextView;
-    protected TextView mLongitudeTextView;
-
-    protected String mLatitudeLabel;
-    protected String mLongitudeLabel;
     protected String mLastUpdateTimeLabel;
     protected Boolean mRequestingLocationUpdates;
     protected String mLastUpdateTime;
@@ -325,33 +317,26 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     public void onMapReady(final GoogleMap map) {
         this.googleMap = map;
         googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        Location loc = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if(!mGoogleApiClient.isConnected()){
+            mGoogleApiClient.connect();
+        }
+        if(loc != null) {
+            // TODO: if location is null we should show some message.Its crashing the app now.
+            LatLng currentPosition = updateWithNewLocation(loc);
 
-        // add start location marker.
-        LocationManager locManager;
-        String context = Context.LOCATION_SERVICE;
-        Criteria c = new Criteria();
-        c.setAccuracy(Criteria.ACCURACY_FINE);
-        c.setAltitudeRequired(false);
-        c.setBearingRequired(false);
-        c.setCostAllowed(true);
-        c.setPowerRequirement(Criteria.POWER_LOW);
-
-        locManager = (LocationManager) getSystemService(context);
-        String provider = locManager.getBestProvider(c, true);
-        Location loc = locManager.getLastKnownLocation(provider);
-
-        LatLng currentPosition = updateWithNewLocation(loc);
-        Marker startLocation = googleMap.addMarker(new MarkerOptions()
-                .position(currentPosition)
-                .title("Start Location")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 17));
-        route.setStartLocation(new com.theavalanche.eskimo.maps.Location(loc));
+            Marker startLocation = googleMap.addMarker(new MarkerOptions()
+                    .position(currentPosition)
+                    .title("Start Location")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 17));
+            route.setStartLocation(new com.theavalanche.eskimo.maps.Location(loc));
+        }
     }
 
     // Location Received
     private LatLng updateWithNewLocation(Location loc) {
-        String latLonString;
         LatLng currentLocation = null;
         if (loc != null) {
             double lat = loc.getLatitude();
@@ -360,9 +345,8 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
             currentLocation = new LatLng(lat, lon);
 
         } else {
-            latLonString = "No location found";
+            Log.d(TAG, "No location found");;
         }
-
         return currentLocation;
     }
 }
