@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 
 
-class DBConn extends SQLiteOpenHelper {
+public class DBConn extends SQLiteOpenHelper {
 
 public static final String DATABASE_NAME = "MyDBName.db";
 public static final String CONTACTS_TABLE_NAME = "contacts";
@@ -23,7 +23,7 @@ public static final String CONTACTS_COLUMN_CITY = "place";
     public static final String CONTACTS_COLUMN_PHONE = "phone";
     private HashMap hp;
 
-    public DBHelper(Context context) {
+    public DBConn(Context context) {
         super(context, DATABASE_NAME , null, 1);
         }
 
@@ -36,8 +36,13 @@ public void onCreate(SQLiteDatabase db) {
         );
         }
 
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-public boolean insertContact  (String name, String phone, String email, String street,String place)
+        }
+
+
+        public boolean insertContact  (String name, String phone, String email, String street,String place)
         {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
