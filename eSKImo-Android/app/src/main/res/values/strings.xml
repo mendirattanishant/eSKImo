@@ -18,6 +18,8 @@
     <string name="exit_session_details">Exit</string>
     <string name="location_updated_message">Location updated</string>
     <string name="title_activity_route_details">Route Details</string>
+    <string name="title_activity_route_group">Route Group</string>
     <string name="facebook_app_id">972313096147978</string>
     <string name="title_activity_event_details">EventDetailsActivity</string>
+    <string name="refresh_session_details">Refresh</string>
 </resources>
