@@ -1,6 +1,7 @@
 
+package com.theavalanche.eskimo.info.api;
 
-public interface userAPI {
+public interface UserAPI {
     @GET("/users/{user}")
-    public void getFeed(@Path("user") String user,Callback<userInfo> response);
+    public void getFeed(@Path("user") String user,Callback<UserInfo> response);
 }

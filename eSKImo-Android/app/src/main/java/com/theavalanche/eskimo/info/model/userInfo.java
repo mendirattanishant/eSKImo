@@ -1,5 +1,7 @@
 
-class userInfo{
+package com.theavalanche.eskimo.info.model;
+
+class UserInfo{
     int userID;
     String name;
 
