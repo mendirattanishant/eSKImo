@@ -11,3 +11,4 @@ public interface UserAPI {
     public void getFeed(@Path("user") String user, Callback<UserInfo> response);
 
 }
+

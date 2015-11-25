@@ -1,5 +1,11 @@
-class localLocationInfo{
+package com.theavalanche.eskimo.info.localModel;
+
+/**
+ * Created by Christopher on 11/24/2015.
+ */
+public class LocationInfo{
     int locationID;
+    int eventID;
     long lat;
     long lon;
 
@@ -9,6 +15,14 @@ class localLocationInfo{
 
     public void setLocationID(int locationID) {
         this.locationID = locationID;
+    }
+
+    public int getEventID() {
+        return eventID;
+    }
+
+    public void setEventID(int eventID) {
+        this.eventID = eventID;
     }
 
     public void setLat(long lat) {
