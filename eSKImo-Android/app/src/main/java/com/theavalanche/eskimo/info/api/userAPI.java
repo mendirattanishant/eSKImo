@@ -7,6 +7,7 @@ import retrofit.http.GET;
 import retrofit.http.Path;
 
 public interface UserAPI {
+
     @GET("/users/{user}")
     public void getFeed(@Path("user") String user, Callback<UserInfo> response);
 

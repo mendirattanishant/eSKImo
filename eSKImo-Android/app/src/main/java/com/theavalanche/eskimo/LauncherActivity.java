@@ -44,16 +44,6 @@ public class LauncherActivity extends Activity {
             }
         });
 
-
-
-        findViewById(R.id.tvTitle).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LauncherActivity.this, RouteActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
         // Login with Facebook
         fb_loginButton = (LoginButton)findViewById(R.id.fb_login_button);
 

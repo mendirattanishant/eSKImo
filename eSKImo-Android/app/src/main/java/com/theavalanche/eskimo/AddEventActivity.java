@@ -12,8 +12,12 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.theavalanche.eskimo.adapters.UsersListAdapter;
+import com.theavalanche.eskimo.models.User;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,6 +73,13 @@ public class AddEventActivity extends ActionBarActivity {
         String timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.US).format(Calendar.getInstance().getTime());
         bStartDate.setText(timeStamp);
         bEndDate.setText(timeStamp);
+
+        bInviteUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                makeUserPicker();
+            }
+        });
     }
 
     @Override
@@ -158,4 +169,30 @@ public class AddEventActivity extends ActionBarActivity {
         // Display the dialog
         mDateTimeDialog.show();
     }
+
+    private void makeUserPicker(){
+        Dialog userPickerDialog = new Dialog(this);
+
+        View view = getLayoutInflater().inflate(R.layout.picker_user, null);
+
+        ListView lv = (ListView) view.findViewById(R.id.lvUsers);
+
+        UsersListAdapter adapter = new UsersListAdapter(this);
+
+        List<User> users = new ArrayList<>();
+
+        for(int i = 0; i < 10; i++){
+            User user = new User();
+            users.add(user);
+        }
+
+        adapter.addUsers(users);
+        lv.setAdapter(adapter);
+
+        userPickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        userPickerDialog.setContentView(view);
+        userPickerDialog.show();
+
+    }
+
 }
