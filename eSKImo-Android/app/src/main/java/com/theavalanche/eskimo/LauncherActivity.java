@@ -66,15 +66,7 @@ public class LauncherActivity extends Activity {
                 // info.setText("Login attempt failed.");
             }
         });
-        // Login with Google
-        findViewById(R.id.btn_google).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LauncherActivity.this, RegisterActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -74,14 +74,6 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Login with Google"
-            android:id="@+id/btn_google"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp" />
-
     </LinearLayout>
 
     <TextView
