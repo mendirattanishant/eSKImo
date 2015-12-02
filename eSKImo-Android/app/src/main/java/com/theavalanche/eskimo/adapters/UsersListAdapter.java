@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.theavalanche.eskimo.R;
 import com.theavalanche.eskimo.models.User;
 
@@ -67,7 +68,7 @@ public class UsersListAdapter extends BaseAdapter {
 
         viewHolder.name.setText(user.name);
         viewHolder.tagline.setText(user.tagline);
-//TODO        Picasso.with(context).load(videos.get(position).getThumbnail()).into(viewHolder.thumbail);
+        Picasso.with(context).load(user.dpUrl).placeholder(R.drawable.user_placeholder).into(viewHolder.dp);
 
         return convertView;
     }
