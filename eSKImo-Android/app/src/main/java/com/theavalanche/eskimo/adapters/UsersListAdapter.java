@@ -5,8 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.theavalanche.eskimo.R;
 import com.theavalanche.eskimo.models.User;
 
@@ -49,31 +52,30 @@ public class UsersListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
+        User user = users.get(position);
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.row_user, new LinearLayout(context));
             viewHolder = new ViewHolder();
-//            viewHolder.name = (TextView) convertView.findViewById(R.id.tvVideoTitle);
-//            viewHolder.desc = (TextView) convertView.findViewById(R.id.tvVideoDesc);
-//            viewHolder.thumbail = (ImageView) convertView.findViewById(R.id.ivVideoThumbnail);
-//            viewHolder.rlayout = (RelativeLayout) convertView.findViewById(R.id.RlayoutId);
-//            viewHolder.favorite = (ImageButton) convertView.findViewById(R.id.favorite);
+
+            viewHolder.dp = (ImageView) convertView.findViewById(R.id.ivUser);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.tvUserName);
+            viewHolder.tagline = (TextView) convertView.findViewById(R.id.tvTagline);
 
             convertView.setTag(viewHolder);
-//            convertView.setTag(R.id.tvVideoTitle, viewHolder.name);
-//            convertView.setTag(R.id.tvVideoDesc, viewHolder.desc);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-//        viewHolder.name.setText(videos.get(position).getName());
-//        viewHolder.desc.setText(videos.get(position).getDesc());
-//        Picasso.with(context).load(videos.get(position).getThumbnail()).into(viewHolder.thumbail);
+        viewHolder.name.setText(user.name);
+        viewHolder.tagline.setText(user.tagline);
+        Picasso.with(context).load(user.dpUrl).placeholder(R.drawable.user_placeholder).into(viewHolder.dp);
 
         return convertView;
     }
 
     private static class ViewHolder{
-
+        ImageView dp;
+        TextView name, tagline;
     }
 
 }
