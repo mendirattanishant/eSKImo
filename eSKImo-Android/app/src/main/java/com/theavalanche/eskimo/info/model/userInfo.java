@@ -1,16 +1,9 @@
 package com.theavalanche.eskimo.info.model;
 
 public class UserInfo {
-    int userID;
     String name;
+    String password;
 
-    public int getUserID() {
-        return userID;
-    }
-
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
 
     public String getName() {
         return name;
@@ -18,5 +11,13 @@ public class UserInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import com.theavalanche.eskimo.info.api.UserRESTClient;
+import com.theavalanche.eskimo.info.model.UserInfo;
 import com.theavalanche.eskimo.maps.RouteActivity;
 
 import com.facebook.CallbackManager;
@@ -22,6 +25,9 @@ public class LauncherActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserRESTClient u=new UserRESTClient();
+        for(UserInfo uf:u.getUser())
+            Log.i("TEST*******",uf.getName());
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
