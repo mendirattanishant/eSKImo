@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.theavalanche.eskimo.info.api.UserAPI;
 import com.theavalanche.eskimo.info.api.UserRESTClient;
 import com.theavalanche.eskimo.info.model.UserInfo;
 import com.theavalanche.eskimo.maps.RouteActivity;
@@ -17,6 +18,13 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import java.util.List;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
+
 public class LauncherActivity extends Activity {
 
     private CallbackManager callbackManager;
@@ -26,8 +34,23 @@ public class LauncherActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         UserRESTClient u=new UserRESTClient();
-        for(UserInfo uf:u.getUser())
-            Log.i("TEST*******",uf.getName());
+
+        Call<List<UserInfo>> callback=u.getUser();
+        callback.enqueue(new Callback<List<UserInfo>>() {
+            @Override
+            public void onResponse(Response<List<UserInfo>> response, Retrofit retrofit) {
+                //Success
+                for(UserInfo user:response.body())
+                    Log.i("App", user.getName());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                //Check Aysc
+            }
+        });
+        //Check Aysc
+
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();

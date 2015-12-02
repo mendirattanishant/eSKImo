@@ -14,22 +14,22 @@ import retrofit.http.Field;
 
 public interface UserAPI {
     @GET("/getUsers")
-    public List<UserInfo> getUsers();
+    public Call<List<UserInfo>> getUsers();
 
     @FormUrlEncoded
     @POST("/createUser")
-    UserInfo createUser(@Field("email_id") String email_id, @Field("password") String password);
+    Call<UserInfo> createUser(@Field("email_id") String email_id, @Field("password") String password);
 
     @FormUrlEncoded
     @POST("/login")
-    UserInfo login(@Field("email_id") String email_id, @Field("password") String password);
+    Call<UserInfo> login(@Field("email_id") String email_id, @Field("password") String password);
 
     @FormUrlEncoded
     @POST("/attendEvent")
-    EventAttendeesInfo  attendEvent(@Field("event_id") int event_id, @Field("user_id") int user_id);
+    Call<EventAttendeesInfo>  attendEvent(@Field("event_id") int event_id, @Field("user_id") int user_id);
 
     @FormUrlEncoded
     @POST("/deleteEvent")
-    String deleteEvent (@Field("event_id") int event_id, @Field("user_id") int user_id);
+    Call<String> deleteEvent (@Field("event_id") int event_id, @Field("user_id") int user_id);
 
 }

@@ -41,6 +41,4 @@ public class SkiRecordInfo {
     public void setStart_time(String start_time) {
         this.start_time = start_time;
     }
-
-
 }
