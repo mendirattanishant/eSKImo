@@ -62,9 +62,9 @@ public class LauncherActivity extends Activity {
 
                 User user = new User(null, etEmail.getText().toString(), etPassword.getText().toString());
 
-                userRESTClient.login(user).enqueue(new Callback<UserInfo>() {
+                userRESTClient.login(user).enqueue(new Callback<User>() {
                     @Override
-                    public void onResponse(Response<UserInfo> response, Retrofit retrofit) {
+                    public void onResponse(Response<User> response, Retrofit retrofit) {
                         Log.d(TAG, "Successful email login");
                         Log.d(TAG, response.body().getName());
                         Intent intent = new Intent(LauncherActivity.this, MainActivity.class);

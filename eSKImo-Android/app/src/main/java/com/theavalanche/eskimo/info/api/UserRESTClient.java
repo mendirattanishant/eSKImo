@@ -22,11 +22,11 @@ public class UserRESTClient {
         return  service.getUsers();
     }
 
-    public Call<UserInfo> createUser(User u){
-        return service.createUser(u.getEmail(), u.getPassword());
+    public Call<User> createUser(User u){
+        return service.createUser(u.getEmail(), u.getPassword(), u.getName(), u.getTagline(), u.getDpUrl());
     }
 
-    public Call<UserInfo> login(User u){
+    public Call<User> login(User u){
         return service.login(u.getEmail(), u.getPassword());
     }
 

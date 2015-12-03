@@ -62,9 +62,9 @@ public class RegisterActivity extends Activity {
                 User user = new User(null, email, password);
                 user.setName(etName.getText().toString());
 
-                userRESTClient.createUser(user).enqueue(new Callback<UserInfo>() {
+                userRESTClient.createUser(user).enqueue(new Callback<User>() {
                     @Override
-                    public void onResponse(Response<UserInfo> response, Retrofit retrofit) {
+                    public void onResponse(Response<User> response, Retrofit retrofit) {
                         Log.d(TAG, "User registered successfully");
                         Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                         startActivity(intent);

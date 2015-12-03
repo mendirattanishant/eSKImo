@@ -1,6 +1,9 @@
 package com.theavalanche.eskimo.info.model;
 
 public class UserInfo {
+
+    String user_id;
+    String email_id;
     String name;
     String password;
 

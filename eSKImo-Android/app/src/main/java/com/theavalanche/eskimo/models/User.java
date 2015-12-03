@@ -2,33 +2,33 @@ package com.theavalanche.eskimo.models;
 
 public class User {
 
-    private String id;
-    private String email;
+    private String user_id;
+    private String email_id;
     private String password;
     private String name;
     private String tagline;
     private String dpUrl;
 
     public User(String id, String email, String password){
-        this.id = id;
-        this.email = email;
+        this.user_id = id;
+        this.email_id = email;
         this.password = password;
     }
 
     public String getId() {
-        return id;
+        return user_id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.user_id = id;
     }
 
     public String getEmail() {
-        return email;
+        return email_id;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email_id = email;
     }
 
     public String getPassword() {

@@ -7,6 +7,7 @@ import com.theavalanche.eskimo.models.User;
 
 import java.util.List;
 
+import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.http.Field;
 import retrofit.Call;
@@ -15,6 +16,7 @@ public class EventRESTClient {
 
     private Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://eskimo-cmpe277.rhcloud.com")
+            .addConverterFactory(GsonConverterFactory.create())
             .build();
 
     private EventAPI service = retrofit.create(EventAPI.class);

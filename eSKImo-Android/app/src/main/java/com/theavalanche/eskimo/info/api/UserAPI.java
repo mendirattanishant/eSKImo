@@ -2,6 +2,8 @@ package com.theavalanche.eskimo.info.api;
 
 import com.theavalanche.eskimo.info.model.UserInfo;
 import com.theavalanche.eskimo.info.model.EventAttendeesInfo;
+import com.theavalanche.eskimo.models.User;
+
 import java.util.*;
 import retrofit.Call;
 import retrofit.Callback;
@@ -18,11 +20,17 @@ public interface UserAPI {
 
     @FormUrlEncoded
     @POST("/createUser")
-    Call<UserInfo> createUser(@Field("email_id") String email_id, @Field("password") String password);
+    Call<User> createUser(
+            @Field("email_id") String email_id,
+            @Field("password") String password,
+            @Field("name") String name,
+            @Field("tagline") String tagline,
+            @Field("dpUrl") String dpUrl
+    );
 
     @FormUrlEncoded
     @POST("/login")
-    Call<UserInfo> login(@Field("email_id") String email_id, @Field("password") String password);
+    Call<User> login(@Field("email_id") String email_id, @Field("password") String password);
 
     @FormUrlEncoded
     @POST("/attendEvent")
