@@ -2,6 +2,8 @@ package com.theavalanche.eskimo.info.api;
 
 import com.theavalanche.eskimo.info.model.EventInfo;
 import com.theavalanche.eskimo.info.model.UserInfo;
+import com.theavalanche.eskimo.models.Event;
+import com.theavalanche.eskimo.models.User;
 
 import java.util.List;
 
@@ -9,24 +11,34 @@ import retrofit.Retrofit;
 import retrofit.http.Field;
 import retrofit.Call;
 
-/**
- * Created by Christopher on 12/1/2015.
- */
 public class EventRESTClient {
 
-    Retrofit retrofit = new Retrofit.Builder()
+    private Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://eskimo-cmpe277.rhcloud.com")
             .build();
 
-    EventAPI service = retrofit.create(EventAPI.class);
+    private EventAPI service = retrofit.create(EventAPI.class);
 
-    public Call<EventInfo> createEvent(EventInfo e){
-        return service.createEvent(e.getEvent_id(), e.getUser_id(),e.getEvent_details(),e.getEvent_name(),
-                e.getLocation(),e.getStart_time(),e.getEnd_time());
+    public Call<EventInfo> createEvent(Event e){
+        return service.createEvent(
+                e.getDesc(),
+                e.getTitle(),
+                e.getLocation(),
+                e.getStartTime(),
+                e.getEndTime()
+        );
     }
 
     public Call<List<EventInfo>> getAttendingEvents(EventInfo e){
         return service.getAttendingEvents(e.getEvent_id(), e.getUser_id());
+    }
+
+    public Call<List<EventInfo>> getMyEvents(){
+        return service.getMyEvents();
+    }
+
+    public Call<Event> getEventById(String id){
+        return service.getEventById(id);
     }
 
 }

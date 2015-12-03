@@ -15,8 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.theavalanche.eskimo.adapters.UsersListAdapter;
+import com.theavalanche.eskimo.info.api.EventRESTClient;
+import com.theavalanche.eskimo.info.model.EventInfo;
+import com.theavalanche.eskimo.models.Event;
 import com.theavalanche.eskimo.models.User;
 
 import java.text.SimpleDateFormat;
@@ -24,6 +28,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class AddEventActivity extends ActionBarActivity {
 
@@ -36,6 +44,8 @@ public class AddEventActivity extends ActionBarActivity {
     private Button bEndDate;
     private Button bInviteUser;
 
+    private EventRESTClient eventRESTClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +57,8 @@ public class AddEventActivity extends ActionBarActivity {
         bStartDate = (Button) findViewById(R.id.bStartDate);
         bEndDate = (Button) findViewById(R.id.bEndDate);
         bInviteUser = (Button) findViewById(R.id.bInviteUser);
+
+        eventRESTClient = new EventRESTClient();
 
         //Sample code to add users to view
         List<View> userViews = new ArrayList<>();
@@ -108,7 +120,31 @@ public class AddEventActivity extends ActionBarActivity {
         String desc = etDesc.getText().toString();
         String startDate = bStartDate.getText().toString();
         String endDate = bEndDate.getText().toString();
-        // TODO Save event on server
+
+        Event event = new Event();
+        event.setTitle(title);
+        event.setDesc(desc);
+        event.setStartTime(startDate);
+        event.setEndTime(endDate);
+        // TODO Support Event Location
+
+        eventRESTClient.createEvent(event).enqueue(new Callback<EventInfo>() {
+            @Override
+            public void onResponse(Response<EventInfo> response, Retrofit retrofit) {
+                Log.d(TAG, "Event created!");
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e(TAG, "Problem creating/updating the event");
+                t.printStackTrace();
+                Toast.makeText(AddEventActivity.this, "Event created/updated!", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
     }
 
     private void makeDateTimePicker(final Button button){
@@ -182,7 +218,7 @@ public class AddEventActivity extends ActionBarActivity {
         List<User> users = new ArrayList<>();
 
         for(int i = 0; i < 10; i++){
-            User user = new User();
+            User user = new User(null, "", "");
             users.add(user);
         }
 

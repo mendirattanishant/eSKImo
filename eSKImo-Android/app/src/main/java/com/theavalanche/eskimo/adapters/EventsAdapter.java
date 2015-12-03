@@ -64,10 +64,10 @@ public class EventsAdapter extends BaseAdapter{
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.title.setText(event.title);
-        viewHolder.desc.setText(event.desc);
-        viewHolder.startTime.setText(event.startTime);
-        viewHolder.endTime.setText(event.endTime);
+        viewHolder.title.setText(event.getTitle());
+        viewHolder.desc.setText(event.getDesc());
+        viewHolder.startTime.setText(event.getStartTime());
+        viewHolder.endTime.setText(event.getEndTime());
 
         return convertView;
     }
