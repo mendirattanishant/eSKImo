@@ -57,13 +57,18 @@ public class EventDetailsActivity extends FragmentActivity {
             @Override
             public void onResponse(Response<Event> response, Retrofit retrofit) {
                 Log.d(TAG, "Got event details.");
-                Log.d(TAG, response.toString());
+                Event event = response.body();
+                tvEventTitle.setText(event.getEvent_name());
+                tvEventDesc.setText(event.getEvent_details());
+                tvEventStart.setText("Starts on: "+event.getStart_time());
+                tvEventEnd.setText("Ends on: "+event.getEnd_time());
+                // TODO Support location and user list
             }
 
             @Override
             public void onFailure(Throwable t) {
                 Log.e(TAG, "Problem getting the event");
-                t.printStackTrace();;
+                t.printStackTrace();
             }
         });
 

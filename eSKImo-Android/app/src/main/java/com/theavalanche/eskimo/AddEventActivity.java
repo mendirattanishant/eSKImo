@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.theavalanche.eskimo.adapters.UsersListAdapter;
 import com.theavalanche.eskimo.info.api.EventRESTClient;
-import com.theavalanche.eskimo.info.model.EventInfo;
 import com.theavalanche.eskimo.models.Event;
 import com.theavalanche.eskimo.models.User;
 
@@ -122,15 +121,15 @@ public class AddEventActivity extends ActionBarActivity {
         String endDate = bEndDate.getText().toString();
 
         Event event = new Event();
-        event.setTitle(title);
-        event.setDesc(desc);
-        event.setStartTime(startDate);
-        event.setEndTime(endDate);
+        event.setEvent_name(title);
+        event.setEvent_details(desc);
+        event.setStart_time(startDate);
+        event.setEnd_time(endDate);
         // TODO Support Event Location
 
-        eventRESTClient.createEvent(event).enqueue(new Callback<EventInfo>() {
+        eventRESTClient.createEvent(event).enqueue(new Callback<Event>() {
             @Override
-            public void onResponse(Response<EventInfo> response, Retrofit retrofit) {
+            public void onResponse(Response<Event> response, Retrofit retrofit) {
                 Log.d(TAG, "Event created!");
                 setResult(RESULT_OK);
                 finish();

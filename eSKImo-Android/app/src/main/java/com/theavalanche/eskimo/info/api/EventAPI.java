@@ -1,7 +1,5 @@
 package com.theavalanche.eskimo.info.api;
 
-import com.theavalanche.eskimo.info.model.EventInfo;
-import com.theavalanche.eskimo.info.model.UserInfo;
 import com.theavalanche.eskimo.models.Event;
 
 import java.util.List;
@@ -17,7 +15,7 @@ public interface EventAPI {
 
     @FormUrlEncoded
     @POST("/createEvent")
-    Call<EventInfo> createEvent(
+    Call<Event> createEvent(
             @Field("event_details") String  event_details,
             @Field("event_name") String event_name,
             @Field("location") String location,
@@ -27,13 +25,13 @@ public interface EventAPI {
 
     @FormUrlEncoded
     @POST("/getAttendingEvents")
-    Call<List<EventInfo>> getAttendingEvents(
+    Call<List<Event>> getAttendingEvents(
             @Field("event_id") int event_id,
             @Field("user_id") int user_id
     );
 
     @POST("/getAttendingEvents")
-    Call<List<EventInfo>> getMyEvents();
+    Call<List<Event>> getMyEvents();
 
     @GET("/events/{event_id}")
     Call<Event> getEventById(@Path("event_id") String event_id);

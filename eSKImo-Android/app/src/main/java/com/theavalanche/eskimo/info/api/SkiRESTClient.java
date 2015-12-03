@@ -1,9 +1,6 @@
 package com.theavalanche.eskimo.info.api;
 
 import com.theavalanche.eskimo.info.model.SkiRecordInfo;
-import com.theavalanche.eskimo.info.model.UserInfo;
-
-import java.util.List;
 
 import retrofit.Call;
 import retrofit.Retrofit;

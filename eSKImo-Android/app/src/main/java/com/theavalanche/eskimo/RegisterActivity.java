@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.theavalanche.eskimo.info.api.UserRESTClient;
-import com.theavalanche.eskimo.info.model.UserInfo;
 import com.theavalanche.eskimo.models.User;
 
 import retrofit.Callback;

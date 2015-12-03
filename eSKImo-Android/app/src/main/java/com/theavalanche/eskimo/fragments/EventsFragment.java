@@ -22,7 +22,6 @@ import com.theavalanche.eskimo.EventDetailsActivity;
 import com.theavalanche.eskimo.R;
 import com.theavalanche.eskimo.adapters.EventsAdapter;
 import com.theavalanche.eskimo.info.api.EventRESTClient;
-import com.theavalanche.eskimo.info.model.EventInfo;
 import com.theavalanche.eskimo.models.Event;
 
 import java.util.ArrayList;
@@ -52,10 +51,11 @@ public class EventsFragment extends Fragment{
         eventRESTClient = new EventRESTClient();
         adapter = new EventsAdapter(getActivity());
 
-        eventRESTClient.getMyEvents().enqueue(new Callback<List<EventInfo>>() {
+        eventRESTClient.getMyEvents().enqueue(new Callback<List<Event>>() {
             @Override
-            public void onResponse(Response<List<EventInfo>> response, Retrofit retrofit) {
+            public void onResponse(Response<List<Event>> response, Retrofit retrofit) {
                 Log.d(TAG, "Got events"+response.body().size());
+                adapter.addEvents(response.body());
             }
 
             @Override
@@ -75,12 +75,12 @@ public class EventsFragment extends Fragment{
         listView.setAdapter(adapter);
 
         // Sample events list
-        List<Event> events = new ArrayList<>();
-        for(int i = 0; i < 100; i++){
-            Event event = new Event();
-            events.add(event);
-        }
-        adapter.addEvents(events);
+//        List<Event> events = new ArrayList<>();
+//        for(int i = 0; i < 100; i++){
+//            Event event = new Event();
+//            events.add(event);
+//        }
+//        adapter.addEvents(events);
 
         setHasOptionsMenu(true);
 

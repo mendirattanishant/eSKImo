@@ -1,14 +1,11 @@
 package com.theavalanche.eskimo.info.api;
 
-import com.theavalanche.eskimo.info.model.UserInfo;
 import com.theavalanche.eskimo.info.model.EventAttendeesInfo;
 import com.theavalanche.eskimo.models.User;
 
 import java.util.*;
 import retrofit.Call;
-import retrofit.Callback;
 import retrofit.http.GET;
-import retrofit.http.Path;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
 import retrofit.http.Field;
@@ -16,7 +13,7 @@ import retrofit.http.Field;
 
 public interface UserAPI {
     @GET("/getUsers")
-    public Call<List<UserInfo>> getUsers();
+    public Call<List<User>> getUsers();
 
     @FormUrlEncoded
     @POST("/createUser")

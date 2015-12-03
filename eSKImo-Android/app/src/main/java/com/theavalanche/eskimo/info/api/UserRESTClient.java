@@ -1,7 +1,6 @@
 package com.theavalanche.eskimo.info.api;
 
 import com.theavalanche.eskimo.info.model.EventAttendeesInfo;
-import com.theavalanche.eskimo.info.model.UserInfo;
 import com.theavalanche.eskimo.models.User;
 
 import java.util.*;
@@ -18,7 +17,7 @@ public class UserRESTClient {
 
     private UserAPI service = retrofit.create(UserAPI.class);
 
-    public Call<List<UserInfo>> getUser(){
+    public Call<List<User>> getUser(){
         return  service.getUsers();
     }
 

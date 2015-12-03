@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.theavalanche.eskimo.info.api.UserRESTClient;
-import com.theavalanche.eskimo.info.model.UserInfo;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -66,7 +65,6 @@ public class LauncherActivity extends Activity {
                     @Override
                     public void onResponse(Response<User> response, Retrofit retrofit) {
                         Log.d(TAG, "Successful email login");
-                        Log.d(TAG, response.body().getName());
                         Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

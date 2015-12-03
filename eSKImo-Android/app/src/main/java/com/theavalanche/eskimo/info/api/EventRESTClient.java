@@ -1,15 +1,11 @@
 package com.theavalanche.eskimo.info.api;
 
-import com.theavalanche.eskimo.info.model.EventInfo;
-import com.theavalanche.eskimo.info.model.UserInfo;
 import com.theavalanche.eskimo.models.Event;
-import com.theavalanche.eskimo.models.User;
 
 import java.util.List;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
-import retrofit.http.Field;
 import retrofit.Call;
 
 public class EventRESTClient {
@@ -21,21 +17,21 @@ public class EventRESTClient {
 
     private EventAPI service = retrofit.create(EventAPI.class);
 
-    public Call<EventInfo> createEvent(Event e){
+    public Call<Event> createEvent(Event e){
         return service.createEvent(
-                e.getDesc(),
-                e.getTitle(),
+                e.getEvent_details(),
+                e.getEvent_name(),
                 e.getLocation(),
-                e.getStartTime(),
-                e.getEndTime()
+                e.getStart_time(),
+                e.getEnd_time()
         );
     }
 
-    public Call<List<EventInfo>> getAttendingEvents(EventInfo e){
+    public Call<List<Event>> getAttendingEvents(Event e){
         return service.getAttendingEvents(e.getEvent_id(), e.getUser_id());
     }
 
-    public Call<List<EventInfo>> getMyEvents(){
+    public Call<List<Event>> getMyEvents(){
         return service.getMyEvents();
     }
 
