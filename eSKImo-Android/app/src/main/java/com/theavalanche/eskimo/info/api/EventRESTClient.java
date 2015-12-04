@@ -27,12 +27,8 @@ public class EventRESTClient {
         );
     }
 
-    public Call<List<Event>> getAttendingEvents(Event e){
-        return service.getAttendingEvents(e.getEvent_id(), e.getUser_id());
-    }
-
-    public Call<List<Event>> getMyEvents(){
-        return service.getMyEvents();
+    public Call<List<Event>> getAttendingEvents(String userId){
+        return service.getAttendingEvents(userId);
     }
 
     public Call<Event> getEventById(String id){

@@ -1,20 +1,24 @@
 package com.theavalanche.eskimo.models;
 
+import java.util.List;
+
 public class Event {
 
-    private int user_id;
-    private int event_id;
+    private String user_id;
+    private String event_id;
     private String event_details;
     private String event_name;
     private String location;
     private String start_time;
     private String end_time;
 
-    public int getEvent_id() {
+    private List<User> users;
+
+    public String getEvent_id() {
         return event_id;
     }
 
-    public int getUser_id() {
+    public String getUser_id() {
         return user_id;
     }
 
@@ -46,7 +50,7 @@ public class Event {
         this.event_details = event_details;
     }
 
-    public void setEvent_id(int event_id) {
+    public void setEvent_id(String event_id) {
         this.event_id = event_id;
     }
 
@@ -62,8 +66,16 @@ public class Event {
         this.start_time = start_time;
     }
 
-    public void setUser_id(int user_id) {
+    public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
 }

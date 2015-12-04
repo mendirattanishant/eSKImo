@@ -6,12 +6,15 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.theavalanche.eskimo.info.api.EventRESTClient;
 import com.theavalanche.eskimo.models.Event;
+import com.theavalanche.eskimo.models.User;
 
 import retrofit.Callback;
 import retrofit.Response;
@@ -53,16 +56,47 @@ public class EventDetailsActivity extends FragmentActivity {
 
         eventRESTClient = new EventRESTClient();
 
+        final LayoutInflater inflater = LayoutInflater.from(this);
+
         eventRESTClient.getEventById(eventId).enqueue(new Callback<Event>() {
             @Override
             public void onResponse(Response<Event> response, Retrofit retrofit) {
                 Log.d(TAG, "Got event details.");
+                Log.d(TAG, ""+response.body());
                 Event event = response.body();
-                tvEventTitle.setText(event.getEvent_name());
-                tvEventDesc.setText(event.getEvent_details());
+                tvEventTitle.setText(""+event.getEvent_name());
+                tvEventDesc.setText(""+event.getEvent_details());
                 tvEventStart.setText("Starts on: "+event.getStart_time());
                 tvEventEnd.setText("Ends on: "+event.getEnd_time());
                 // TODO Support location and user list
+                for(int i = 0; i < event.getUsers().size(); i++){
+                    User user = event.getUsers().get(i);
+                    View view =  inflater.inflate(R.layout.row_user, new LinearLayout(EventDetailsActivity.this));
+
+                    TextView tvUserName = (TextView) view.findViewById(R.id.tvUserName);
+                    TextView tvTagline = (TextView) view.findViewById(R.id.tvTagline);
+                    tvUserName.setText(user.getName());
+                    tvTagline.setText(user.getTagline());
+
+                    ImageView dp = (ImageView) view.findViewById(R.id.ivUser);
+                    if(user.getDpUrl() != null && user.getDpUrl().length() != 0){
+                        Picasso
+                                .with(EventDetailsActivity.this)
+                                .load(user.getDpUrl())
+                                .placeholder(R.drawable.user_placeholder)
+                                .into(dp);
+                    }
+
+
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(EventDetailsActivity.this, UserDetailsActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    userListView.addView(view);
+                }
             }
 
             @Override
@@ -72,18 +106,8 @@ public class EventDetailsActivity extends FragmentActivity {
             }
         });
 
-        LayoutInflater inflater = LayoutInflater.from(this);
-        for(int i = 0; i < 10; i++){
-            View view =  inflater.inflate(R.layout.row_user, new LinearLayout(this));
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(EventDetailsActivity.this, UserDetailsActivity.class);
-                    startActivity(intent);
-                }
-            });
-            userListView.addView(view);
-        }
+
+
     }
 
 }

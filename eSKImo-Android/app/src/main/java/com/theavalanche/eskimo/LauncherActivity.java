@@ -65,9 +65,15 @@ public class LauncherActivity extends Activity {
                     @Override
                     public void onResponse(Response<User> response, Retrofit retrofit) {
                         Log.d(TAG, "Successful email login");
-                        Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        User user = response.body();
+                        if(user == null){
+                            Toast.makeText(LauncherActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Session.loggedUser = response.body();
+                            Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
 
                     @Override

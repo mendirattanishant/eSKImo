@@ -65,6 +65,7 @@ public class RegisterActivity extends Activity {
                     @Override
                     public void onResponse(Response<User> response, Retrofit retrofit) {
                         Log.d(TAG, "User registered successfully");
+                        Session.loggedUser = response.body();
                         Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

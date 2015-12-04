@@ -23,17 +23,10 @@ public interface EventAPI {
             @Field("end_time") String end_time
     );
 
-    @FormUrlEncoded
-    @POST("/getAttendingEvents")
-    Call<List<Event>> getAttendingEvents(
-            @Field("event_id") int event_id,
-            @Field("user_id") int user_id
-    );
+    @GET("/getAttendingEvents/{user_id}")
+    Call<List<Event>> getAttendingEvents(@Path("user_id") String user_id);
 
-    @POST("/getAttendingEvents")
-    Call<List<Event>> getMyEvents();
-
-    @GET("/events/{event_id}")
+    @GET("/getEventDetail/{event_id}")
     Call<Event> getEventById(@Path("event_id") String event_id);
 
 }

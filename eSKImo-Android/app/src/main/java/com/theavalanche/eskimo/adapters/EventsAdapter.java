@@ -72,6 +72,10 @@ public class EventsAdapter extends BaseAdapter{
         return convertView;
     }
 
+    public Event getEvent(int i){
+        return events.get(i);
+    }
+
     private static class ViewHolder{
         TextView title, desc, startTime, endTime;
     }

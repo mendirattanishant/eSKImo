@@ -1,7 +1,6 @@
 package com.theavalanche.eskimo.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,11 +19,11 @@ import android.widget.Toast;
 import com.theavalanche.eskimo.AddEventActivity;
 import com.theavalanche.eskimo.EventDetailsActivity;
 import com.theavalanche.eskimo.R;
+import com.theavalanche.eskimo.Session;
 import com.theavalanche.eskimo.adapters.EventsAdapter;
 import com.theavalanche.eskimo.info.api.EventRESTClient;
 import com.theavalanche.eskimo.models.Event;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -51,20 +50,22 @@ public class EventsFragment extends Fragment{
         eventRESTClient = new EventRESTClient();
         adapter = new EventsAdapter(getActivity());
 
-        eventRESTClient.getMyEvents().enqueue(new Callback<List<Event>>() {
+        eventRESTClient.getAttendingEvents(Session.loggedUser.getId()).enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Response<List<Event>> response, Retrofit retrofit) {
-                Log.d(TAG, "Got events"+response.body().size());
+                Log.d(TAG, "Got events" + response.body().size());
                 adapter.addEvents(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 Log.e(TAG, "Error getting my events");
-                t.printStackTrace();;
+                t.printStackTrace();
                 Toast.makeText(getActivity(), "Error getting my events", Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 
     @Override
@@ -74,20 +75,13 @@ public class EventsFragment extends Fragment{
 
         listView.setAdapter(adapter);
 
-        // Sample events list
-//        List<Event> events = new ArrayList<>();
-//        for(int i = 0; i < 100; i++){
-//            Event event = new Event();
-//            events.add(event);
-//        }
-//        adapter.addEvents(events);
-
         setHasOptionsMenu(true);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
+                intent.putExtra("eventId", adapter.getEvent(i).getEvent_id());
                 startActivity(intent);
             }
         });
