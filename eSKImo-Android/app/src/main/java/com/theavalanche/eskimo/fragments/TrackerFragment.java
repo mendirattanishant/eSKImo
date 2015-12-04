@@ -74,6 +74,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
     private Chronometer timer;
     private long elapsedTime;
     private SupportMapFragment mapFragment=null;
+    private Location startLocation;
 
     public TrackerFragment(){
 
@@ -252,7 +253,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
             if (savedInstanceState.keySet().contains(LAST_UPDATED_TIME_STRING_KEY)) {
                 mLastUpdateTime = savedInstanceState.getString(LAST_UPDATED_TIME_STRING_KEY);
             }
-            updateUI();
+            updateUI(null);
         }
     }
 
@@ -292,9 +293,12 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    private void updateUI() {
+    private void updateUI(Route route) {
+        if(route == null) {
+         return;
+        }
         mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel,
-                mLastUpdateTime));
+                route.getDistance()));
     }
 
     protected void stopLocationUpdates() {
@@ -308,7 +312,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         if (mCurrentLocation == null) {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            updateUI();
+            updateUI(null);
         }
         if (mRequestingLocationUpdates) {
             startLocationUpdates();
@@ -344,7 +348,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
-        updateUI();
+        updateUI(route);
         Toast.makeText(getActivity(), getResources().getString(R.string.location_updated_message),
                 Toast.LENGTH_SHORT).show();
     }
