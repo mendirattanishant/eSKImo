@@ -16,6 +16,7 @@ public interface EventAPI {
     @FormUrlEncoded
     @POST("/createEvent")
     Call<Event> createEvent(
+            @Field("user_id") String  user_id,
             @Field("event_details") String  event_details,
             @Field("event_name") String event_name,
             @Field("location") String location,

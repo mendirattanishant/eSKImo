@@ -28,7 +28,7 @@ public class EventsAdapter extends BaseAdapter{
     }
 
     public void addEvents(List<Event> events){
-        this.events.addAll(events);
+        this.events = events;
         notifyDataSetChanged();
     }
 

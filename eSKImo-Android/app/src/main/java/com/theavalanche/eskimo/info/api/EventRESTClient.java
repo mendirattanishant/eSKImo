@@ -19,6 +19,7 @@ public class EventRESTClient {
 
     public Call<Event> createEvent(Event e){
         return service.createEvent(
+                e.getUser_id(),
                 e.getEvent_details(),
                 e.getEvent_name(),
                 e.getLocation(),

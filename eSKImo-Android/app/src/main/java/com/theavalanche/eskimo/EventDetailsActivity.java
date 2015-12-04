@@ -70,7 +70,7 @@ public class EventDetailsActivity extends FragmentActivity {
                 tvEventEnd.setText("Ends on: "+event.getEnd_time());
                 // TODO Support location and user list
                 for(int i = 0; i < event.getUsers().size(); i++){
-                    User user = event.getUsers().get(i);
+                    final User user = event.getUsers().get(i);
                     View view =  inflater.inflate(R.layout.row_user, new LinearLayout(EventDetailsActivity.this));
 
                     TextView tvUserName = (TextView) view.findViewById(R.id.tvUserName);
@@ -92,6 +92,10 @@ public class EventDetailsActivity extends FragmentActivity {
                         @Override
                         public void onClick(View view) {
                             Intent intent = new Intent(EventDetailsActivity.this, UserDetailsActivity.class);
+                            intent.putExtra("id", user.getId());
+                            intent.putExtra("name", user.getName());
+                            intent.putExtra("tag", user.getTagline());
+                            intent.putExtra("dp", user.getDpUrl());
                             startActivity(intent);
                         }
                     });

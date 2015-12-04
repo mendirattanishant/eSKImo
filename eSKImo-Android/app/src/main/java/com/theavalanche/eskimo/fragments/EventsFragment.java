@@ -50,21 +50,7 @@ public class EventsFragment extends Fragment{
         eventRESTClient = new EventRESTClient();
         adapter = new EventsAdapter(getActivity());
 
-        eventRESTClient.getAttendingEvents(Session.loggedUser.getId()).enqueue(new Callback<List<Event>>() {
-            @Override
-            public void onResponse(Response<List<Event>> response, Retrofit retrofit) {
-                Log.d(TAG, "Got events" + response.body().size());
-                adapter.addEvents(response.body());
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e(TAG, "Error getting my events");
-                t.printStackTrace();
-                Toast.makeText(getActivity(), "Error getting my events", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        getEventList();
 
     }
 
@@ -112,10 +98,31 @@ public class EventsFragment extends Fragment{
         if (resultCode == Activity.RESULT_OK){
             switch (requestCode){
                 case REQUEST_ADD_EVENT:
-                    // TODO Refresh event list since new event is added
+                    getEventList();
                     return;
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void getEventList(){
+        eventRESTClient.getAttendingEvents(Session.loggedUser.getId()).enqueue(new Callback<List<Event>>() {
+            @Override
+            public void onResponse(Response<List<Event>> response, Retrofit retrofit) {
+                if(response.body() != null){
+                    Log.d(TAG, "Got events" + response.body().size());
+                    adapter.addEvents(response.body());
+                }else{
+                    Toast.makeText(getActivity(), "No events found!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e(TAG, "Error getting my events");
+                t.printStackTrace();
+                Toast.makeText(getActivity(), "Error getting my events", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

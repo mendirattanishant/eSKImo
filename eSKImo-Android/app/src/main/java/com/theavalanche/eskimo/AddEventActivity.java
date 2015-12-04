@@ -60,13 +60,13 @@ public class AddEventActivity extends ActionBarActivity {
         eventRESTClient = new EventRESTClient();
 
         //Sample code to add users to view
-        List<View> userViews = new ArrayList<>();
-        LayoutInflater inflater = LayoutInflater.from(this);
-        for(int i = 0; i < 10; i++){
-            View view =  inflater.inflate(R.layout.row_user, new LinearLayout(this));
-            userViews.add(view);
-            userListView.addView(view);
-        }
+//        List<View> userViews = new ArrayList<>();
+//        LayoutInflater inflater = LayoutInflater.from(this);
+//        for(int i = 0; i < 10; i++){
+//            View view =  inflater.inflate(R.layout.row_user, new LinearLayout(this));
+//            userViews.add(view);
+//            userListView.addView(view);
+//        }
 
         bStartDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +125,7 @@ public class AddEventActivity extends ActionBarActivity {
         event.setEvent_details(desc);
         event.setStart_time(startDate);
         event.setEnd_time(endDate);
+        event.setUser_id(Session.loggedUser.getId());
         // TODO Support Event Location
 
         eventRESTClient.createEvent(event).enqueue(new Callback<Event>() {
