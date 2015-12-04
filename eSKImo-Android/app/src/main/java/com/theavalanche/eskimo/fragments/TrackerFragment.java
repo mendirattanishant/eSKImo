@@ -298,7 +298,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
          return;
         }
         mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel,
-                route.getDistance()));
+                (Math.floor(route.getDistance() * 100) / 100)+" miles"));
     }
 
     protected void stopLocationUpdates() {
