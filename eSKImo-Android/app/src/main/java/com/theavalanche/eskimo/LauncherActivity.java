@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.theavalanche.eskimo.info.api.UserRESTClient;
 
 import com.facebook.CallbackManager;
@@ -17,6 +19,9 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.theavalanche.eskimo.models.User;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import retrofit.Callback;
 import retrofit.Response;
@@ -61,32 +66,7 @@ public class LauncherActivity extends Activity {
 
                 User user = new User(null, etEmail.getText().toString(), etPassword.getText().toString());
 
-                userRESTClient.login(user).enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Response<User> response, Retrofit retrofit) {
-                        Log.d(TAG, "Successful email login");
-                        User user = response.body();
-                        if(user == null){
-                            Toast.makeText(LauncherActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
-                        }else{
-                            Session.loggedUser = response.body();
-                            Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        Log.e(TAG, "Problem with login");
-                        Toast.makeText(
-                                LauncherActivity.this,
-                                "Unable to login. Check credentials.",
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        t.printStackTrace();
-                    }
-                });
+                userRESTClient.login(user).enqueue(loginCallback);
 
             }
         });
@@ -96,8 +76,29 @@ public class LauncherActivity extends Activity {
         fb_loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
             @Override
-            public void onSuccess(LoginResult loginResult) {
-
+            public void onSuccess(final LoginResult loginResult) {
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object,GraphResponse response) {
+                                Log.v("LoginActivity", object.toString());
+                                try{
+                                    String email = object.getString("email");
+                                    String password = loginResult.getAccessToken().getToken();
+                                    Log.d(TAG, "Email: "+email);
+                                    Log.d(TAG, "Password: "+password);
+                                    User user = new User(null, email, password);
+                                    userRESTClient.login(user).enqueue(loginCallback);
+                                }catch (JSONException e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender, birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
             }
 
             @Override
@@ -112,6 +113,34 @@ public class LauncherActivity extends Activity {
         });
 
     }
+
+    private Callback<User> loginCallback = new Callback<User>() {
+        @Override
+        public void onResponse(Response<User> response, Retrofit retrofit) {
+            Log.d(TAG, "Successful email login");
+            User user = response.body();
+            if(user == null){
+                Toast.makeText(LauncherActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+            }else{
+                Session.loggedUser = response.body();
+                Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+            Log.e(TAG, "Problem with login");
+            Toast.makeText(
+                    LauncherActivity.this,
+                    "Unable to login. Check credentials.",
+                    Toast.LENGTH_SHORT
+            ).show();
+            t.printStackTrace();
+        }
+    };
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
