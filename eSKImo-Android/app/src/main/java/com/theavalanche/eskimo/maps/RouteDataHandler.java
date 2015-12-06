@@ -1,5 +1,7 @@
 package com.theavalanche.eskimo.maps;
 
+import com.theavalanche.eskimo.models.Route;
+
 import java.util.Map;
 
 /**

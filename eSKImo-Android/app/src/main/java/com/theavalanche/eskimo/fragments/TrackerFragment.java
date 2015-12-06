@@ -36,7 +36,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.theavalanche.eskimo.R;
-import com.theavalanche.eskimo.maps.Route;
+import com.theavalanche.eskimo.models.Route;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -117,7 +117,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
                             .title("Start Location")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 17));
-                    route.setStartLocation(new com.theavalanche.eskimo.maps.Location(loc));
+                    route.setStartLocation(new com.theavalanche.eskimo.models.Location(loc));
                 }
             }
         };
@@ -178,6 +178,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Saving route details", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -322,7 +323,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
-        route.addLocaiton(new com.theavalanche.eskimo.maps.Location(location));
+        route.addLocaiton(new com.theavalanche.eskimo.models.Location(location));
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         googleMap.addPolyline(new PolylineOptions()
                 .addAll(route.getLatLngs())
@@ -390,7 +391,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
                     .title("Start Location")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 17));
-            route.setStartLocation(new com.theavalanche.eskimo.maps.Location(loc));
+            route.setStartLocation(new com.theavalanche.eskimo.models.Location(loc));
         }
     }
 
