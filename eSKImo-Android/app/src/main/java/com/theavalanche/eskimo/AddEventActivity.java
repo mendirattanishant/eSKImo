@@ -41,7 +41,7 @@ public class AddEventActivity extends ActionBarActivity {
     private EditText etDesc;
     private Button bStartDate;
     private Button bEndDate;
-    private Button bInviteUser;
+//    private Button bInviteUser;
 
     private EventRESTClient eventRESTClient;
 
@@ -55,7 +55,7 @@ public class AddEventActivity extends ActionBarActivity {
         etDesc = (EditText) findViewById(R.id.etEventDesc);
         bStartDate = (Button) findViewById(R.id.bStartDate);
         bEndDate = (Button) findViewById(R.id.bEndDate);
-        bInviteUser = (Button) findViewById(R.id.bInviteUser);
+//        bInviteUser = (Button) findViewById(R.id.bInviteUser);
 
         eventRESTClient = new EventRESTClient();
 
@@ -85,12 +85,12 @@ public class AddEventActivity extends ActionBarActivity {
         bStartDate.setText(timeStamp);
         bEndDate.setText(timeStamp);
 
-        bInviteUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                makeUserPicker();
-            }
-        });
+//        bInviteUser.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                makeUserPicker();
+//            }
+//        });
     }
 
     @Override
@@ -204,31 +204,6 @@ public class AddEventActivity extends ActionBarActivity {
         mDateTimeDialog.setContentView(mDateTimeDialogView);
         // Display the dialog
         mDateTimeDialog.show();
-    }
-
-    private void makeUserPicker(){
-        Dialog userPickerDialog = new Dialog(this);
-
-        View view = getLayoutInflater().inflate(R.layout.picker_user, null);
-
-        ListView lv = (ListView) view.findViewById(R.id.lvUsers);
-
-        UsersListAdapter adapter = new UsersListAdapter(this);
-
-        List<User> users = new ArrayList<>();
-
-        for(int i = 0; i < 10; i++){
-            User user = new User(null, "", "");
-            users.add(user);
-        }
-
-        adapter.addUsers(users);
-        lv.setAdapter(adapter);
-
-        userPickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        userPickerDialog.setContentView(view);
-        userPickerDialog.show();
-
     }
 
 }

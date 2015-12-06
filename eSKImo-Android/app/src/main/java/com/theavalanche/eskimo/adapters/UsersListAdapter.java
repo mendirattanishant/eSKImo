@@ -68,9 +68,19 @@ public class UsersListAdapter extends BaseAdapter {
 
         viewHolder.name.setText(user.getName());
         viewHolder.tagline.setText(user.getTagline());
-        Picasso.with(context).load(user.getDpUrl()).placeholder(R.drawable.user_placeholder).into(viewHolder.dp);
+        if(user.getDpUrl() != null && user.getDpUrl().length() > 0){
+            Picasso
+                    .with(context)
+                    .load(user.getDpUrl())
+                    .placeholder(R.drawable.user_placeholder)
+                    .into(viewHolder.dp);
+        }
 
         return convertView;
+    }
+
+    public User getUser(int i){
+        return users.get(i);
     }
 
     private static class ViewHolder{

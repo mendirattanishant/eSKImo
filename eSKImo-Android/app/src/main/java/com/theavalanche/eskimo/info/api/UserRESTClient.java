@@ -29,12 +29,12 @@ public class UserRESTClient {
         return service.login(u.getEmail(), u.getPassword());
     }
 
-    public Call<EventAttendeesInfo> attendEvent(EventAttendeesInfo u){
-        return service.attendEvent(u.getEvent_id(), u.getUser_id());
+    public Call<EventAttendeesInfo> attendEvent(String eventId, String userId){
+        return service.attendEvent(eventId, userId);
     }
 
-    public Call<String> deleteEvent(EventAttendeesInfo u){
-        return service.deleteEvent(u.getEvent_id(),u.getUser_id());
+    public Call<String> deleteEvent(String eventId, String userId){
+        return service.deleteEvent(eventId, userId);
     }
 
 }
