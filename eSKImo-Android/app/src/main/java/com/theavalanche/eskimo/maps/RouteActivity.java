@@ -32,7 +32,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.theavalanche.eskimo.R;
-import com.theavalanche.eskimo.models.Route;
+import com.theavalanche.eskimo.models.SkiRecord;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -65,7 +65,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     protected String mLastUpdateTimeLabel;
     protected Boolean mRequestingLocationUpdates;
     protected String mLastUpdateTime;
-    private Route route;
+    private SkiRecord route;
     private GoogleMap googleMap;
     private Chronometer timer;
     private long elapsedTime;
@@ -93,7 +93,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         updateValuesFromBundle(savedInstanceState);
         buildGoogleApiClient();
         mExitUpdatesButton.setEnabled(true);
-        route = new Route();
+        route = new SkiRecord();
         //TODO:  add user info to route here.
 
     }

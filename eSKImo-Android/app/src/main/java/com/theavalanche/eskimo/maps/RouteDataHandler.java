@@ -1,6 +1,6 @@
 package com.theavalanche.eskimo.maps;
 
-import com.theavalanche.eskimo.models.Route;
+import com.theavalanche.eskimo.models.SkiRecord;
 
 import java.util.Map;
 
@@ -8,15 +8,15 @@ import java.util.Map;
  * Created by jue on 11/24/15.
  */
 public class RouteDataHandler {
-    public Route getRoute(String userId, String eventId){
+    public SkiRecord getRoute(String userId, String eventId){
         return null;
     }
 
-    public Map<String,Route> getRoutes(String[] userId,String eventId){
+    public Map<String,SkiRecord> getRoutes(String[] userId,String eventId){
         return null;
     }
 
-    public void saveRoute(Route route){
+    public void saveRoute(SkiRecord route){
 
     }
 

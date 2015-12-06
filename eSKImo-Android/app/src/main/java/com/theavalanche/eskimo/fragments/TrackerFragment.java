@@ -36,7 +36,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.theavalanche.eskimo.R;
-import com.theavalanche.eskimo.models.Route;
+import com.theavalanche.eskimo.models.SkiRecord;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -69,7 +69,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
     protected String mLastUpdateTimeLabel;
     protected Boolean mRequestingLocationUpdates;
     protected String mLastUpdateTime;
-    private Route route;
+    private SkiRecord route;
     private GoogleMap googleMap;
     private Chronometer timer;
     private long elapsedTime;
@@ -138,7 +138,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         updateValuesFromBundle(savedInstanceState);
         buildGoogleApiClient();
         mExitUpdatesButton.setEnabled(true);
-        route = new Route();
+        route = new SkiRecord();
         //TODO:  add user info to route here.
 
 
@@ -294,7 +294,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    private void updateUI(Route route) {
+    private void updateUI(SkiRecord route) {
         if(route == null) {
          return;
         }

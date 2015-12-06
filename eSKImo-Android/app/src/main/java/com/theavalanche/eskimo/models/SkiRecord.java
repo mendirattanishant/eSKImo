@@ -10,15 +10,24 @@ import java.util.List;
 /**
  * Created by jue on 11/22/15.
  */
-public class Route {
+public class SkiRecord {
     private int userId;
+    private int eventId;
     private String title;
     private Location startLocation;
     private Location endLocation;
     private Date startTime;
     private Date endTime;
-
     private String path;
+
+    public int getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
+    }
+
     private List<Location> locations = new ArrayList<Location>();
     List<LatLng> latLngs = new ArrayList<LatLng>();
 
