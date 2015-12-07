@@ -12,21 +12,12 @@ import java.util.List;
  */
 public class SkiRecord {
     private int userId;
-    private int eventId;
     private String title;
     private Location startLocation;
     private Location endLocation;
     private Date startTime;
     private Date endTime;
     private String path;
-
-    public int getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(int eventId) {
-        this.eventId = eventId;
-    }
 
     private List<Location> locations = new ArrayList<Location>();
     List<LatLng> latLngs = new ArrayList<LatLng>();
@@ -143,8 +134,4 @@ public class SkiRecord {
         this.locations = locations;
     }
 
-    // used to create json out of this model object for backend to consume.
-    public String toJson() {
-        return "";
-    }
 }

@@ -1,6 +1,5 @@
 package com.theavalanche.eskimo.info.api;
 
-import com.theavalanche.eskimo.models.Location;
 import com.theavalanche.eskimo.models.SkiRecord;
 
 import java.util.Date;
@@ -21,13 +20,12 @@ public interface SkiRecordAPI {
     @FormUrlEncoded
     @POST("/createSkiRecord")
     Call<SkiRecord> createSkiRecord(
-            @Field("event_id") int event_id,
             @Field("user_id") int user_id,
             @Field("ski_start_time") Date ski_start_time,
             @Field("ski_stop_time") Date ski_stop_time,
             @Field("ski_distance") double ski_distance,
-            @Field("start_location") Location start_location,
-            @Field("end_location") Location end_location,
+            @Field("start_location") String start_location,
+            @Field("end_location") String end_location,
             @Field("path") String path
     );
 
