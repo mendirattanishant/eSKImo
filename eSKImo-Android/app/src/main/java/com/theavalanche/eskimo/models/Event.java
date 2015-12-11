@@ -11,6 +11,7 @@ public class Event {
     private String location;
     private String start_time;
     private String end_time;
+    private String flag;
 
     private List<User> users;
 
@@ -76,6 +77,14 @@ public class Event {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 
 }

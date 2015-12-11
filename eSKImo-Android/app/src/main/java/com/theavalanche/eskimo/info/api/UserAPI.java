@@ -31,10 +31,16 @@ public interface UserAPI {
 
     @FormUrlEncoded
     @POST("/attendEvent")
-    Call<EventAttendeesInfo>  attendEvent(@Field("event_id") String event_id, @Field("user_id") String user_id);
+    Call<EventAttendeesInfo>  attendEvent(@Field("event_id") String event_id, @Field("user_id") String user_id, @Field("flag") String flag);
+
+    @FormUrlEncoded
+    @POST("/goToEvent")
+    Call<String>  goToEvent(@Field("event_id") String event_id, @Field("user_id") String user_id);
 
     @FormUrlEncoded
     @POST("/deleteEvent")
     Call<String> deleteEvent (@Field("event_id") String event_id, @Field("user_id") String user_id);
+
+
 
 }

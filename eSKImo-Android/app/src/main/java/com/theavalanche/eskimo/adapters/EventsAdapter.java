@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.theavalanche.eskimo.R;
+import com.theavalanche.eskimo.Session;
 import com.theavalanche.eskimo.models.Event;
 
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class EventsAdapter extends BaseAdapter{
             viewHolder.desc = (TextView) convertView.findViewById(R.id.tvDesc);
             viewHolder.startTime = (TextView) convertView.findViewById(R.id.tvStartTime);
             viewHolder.endTime = (TextView) convertView.findViewById(R.id.tvEndTime);
+            viewHolder.eventType = (TextView) convertView.findViewById(R.id.tvEventType);
 
             convertView.setTag(viewHolder);
         } else {
@@ -68,6 +70,15 @@ public class EventsAdapter extends BaseAdapter{
         viewHolder.desc.setText(event.getEvent_details());
         viewHolder.startTime.setText(event.getStart_time());
         viewHolder.endTime.setText(event.getEnd_time());
+        if(event.getUser_id().equals(Session.loggedUser.getId())){
+            viewHolder.eventType.setText("Owned");
+        }else{
+            if(event.getFlag().equals("YES")){
+                viewHolder.eventType.setText("Going");
+            }else{
+                viewHolder.eventType.setText("Invited");
+            }
+        }
 
         return convertView;
     }
@@ -77,7 +88,7 @@ public class EventsAdapter extends BaseAdapter{
     }
 
     private static class ViewHolder{
-        TextView title, desc, startTime, endTime;
+        TextView title, desc, startTime, endTime, eventType;
     }
 
 }

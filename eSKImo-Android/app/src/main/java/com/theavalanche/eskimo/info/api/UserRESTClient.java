@@ -30,11 +30,15 @@ public class UserRESTClient {
     }
 
     public Call<EventAttendeesInfo> attendEvent(String eventId, String userId){
-        return service.attendEvent(eventId, userId);
+        return service.attendEvent(eventId, userId, "NO");
     }
 
     public Call<String> deleteEvent(String eventId, String userId){
         return service.deleteEvent(eventId, userId);
+    }
+
+    public Call<String> goToEvent(String eventId, String userId){
+        return service.goToEvent(eventId, userId);
     }
 
 }

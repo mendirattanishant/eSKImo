@@ -2,7 +2,11 @@ package com.theavalanche.eskimo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -22,6 +26,10 @@ import com.theavalanche.eskimo.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import retrofit.Callback;
 import retrofit.Response;
@@ -44,7 +52,6 @@ public class LauncherActivity extends Activity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_launcher);
-
 
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
@@ -84,13 +91,11 @@ public class LauncherActivity extends Activity {
                             public void onCompleted(JSONObject object,GraphResponse response) {
                                 Log.v("LoginActivity", object.toString());
                                 try{
-                                    String email = object.getString("email");
-                                    String password = loginResult.getAccessToken().getToken();
-                                    Log.d(TAG, "Email: "+email);
-                                    Log.d(TAG, "Password: "+password);
-                                    User user = new User(null, email, password);
-                                    userRESTClient.login(user).enqueue(loginCallback);
-                                }catch (JSONException e){
+                                    fbEmail = object.getString("email");
+                                    fbToken = loginResult.getAccessToken().getToken();
+                                    User u = new User(null, fbEmail, fbEmail);
+                                    userRESTClient.login(u).enqueue(fbLoginCallback);
+                                }catch (Exception e){
                                     e.printStackTrace();
                                 }
                             }
@@ -114,6 +119,8 @@ public class LauncherActivity extends Activity {
 
     }
 
+    private String fbEmail, fbToken;
+
     private Callback<User> loginCallback = new Callback<User>() {
         @Override
         public void onResponse(Response<User> response, Retrofit retrofit) {
@@ -122,6 +129,36 @@ public class LauncherActivity extends Activity {
             if(user == null){
                 Toast.makeText(LauncherActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
             }else{
+                Session.loggedUser = response.body();
+                Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+            Log.e(TAG, "Problem with login");
+            Toast.makeText(
+                    LauncherActivity.this,
+                    "Unable to login. Check credentials.",
+                    Toast.LENGTH_SHORT
+            ).show();
+            t.printStackTrace();
+        }
+    };
+
+    private Callback<User> fbLoginCallback = new Callback<User>() {
+        @Override
+        public void onResponse(Response<User> response, Retrofit retrofit) {
+            Log.d(TAG, "Successful email login");
+            User user = response.body();
+            if(user == null){
+                Log.d(TAG, "FB Login == No User found");
+                User u = new User(null, fbEmail, fbEmail);
+                userRESTClient.createUser(u).enqueue(loginCallback);
+            }else{
+                Log.d(TAG, "FB Login == User found");
                 Session.loggedUser = response.body();
                 Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
                 startActivity(intent);

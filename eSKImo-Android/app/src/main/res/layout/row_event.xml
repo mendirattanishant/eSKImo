@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="90dp"
+    android:layout_height="120dp"
     android:padding="10dp"
     android:background="@drawable/onclick">
 
@@ -55,5 +55,14 @@
         android:layout_alignTop="@+id/tvHyphen"
         android:layout_toRightOf="@+id/tvHyphen"
         android:layout_toEndOf="@+id/tvHyphen" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Owned"
+        android:id="@+id/tvEventType"
+        android:layout_below="@+id/tvStartTime"
+        android:layout_marginTop="5dp"/>
 
 </RelativeLayout>

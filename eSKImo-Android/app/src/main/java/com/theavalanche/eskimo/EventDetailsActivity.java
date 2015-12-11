@@ -1,6 +1,8 @@
 package com.theavalanche.eskimo;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -54,11 +56,46 @@ public class EventDetailsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
 
+        eventRESTClient = new EventRESTClient();
+        userRESTClient = new UserRESTClient();
+
         eventId = getIntent().getStringExtra("eventId");
 
         if(eventId == null){
             Toast.makeText(this, "Invalid Event!", Toast.LENGTH_SHORT).show();
             finish();
+        }
+
+        String flag = getIntent().getStringExtra("flag");
+
+        if(flag != null && !flag.equals("YES")){
+            new AlertDialog.Builder(this)
+                    .setTitle("Confirm")
+                    .setMessage("Are you going to this event?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, int which) {
+                            Log.d(TAG, "Going...");
+                            userRESTClient.goToEvent(eventId, Session.loggedUser.getId()).enqueue(new Callback<String>() {
+                                @Override
+                                public void onResponse(Response<String> response, Retrofit retrofit) {
+                                    Log.d(TAG, "Going registered");
+                                    dialog.dismiss();
+                                }
+
+                                @Override
+                                public void onFailure(Throwable t) {
+
+                                }
+                            });
+                        }
+                    })
+                    .setNegativeButton("Undecided", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         }
 
         tvEventTitle = (TextView) findViewById(R.id.tvEventTitle);
@@ -69,9 +106,6 @@ public class EventDetailsActivity extends FragmentActivity {
         userListView = (LinearLayout) findViewById(R.id.llEventUsers);
 
         bInviteUser = (Button) findViewById(R.id.bInviteUser);
-
-        eventRESTClient = new EventRESTClient();
-        userRESTClient = new UserRESTClient();
 
         getEventDetails();
 
