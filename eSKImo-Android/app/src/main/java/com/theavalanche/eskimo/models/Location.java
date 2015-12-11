@@ -1,4 +1,4 @@
-package com.theavalanche.eskimo.maps;
+package com.theavalanche.eskimo.models;
 
 import com.google.android.gms.maps.model.LatLng;
 

@@ -1,4 +1,4 @@
-package com.theavalanche.eskimo.maps;
+package com.theavalanche.eskimo.models;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
@@ -10,15 +10,15 @@ import java.util.List;
 /**
  * Created by jue on 11/22/15.
  */
-public class Route {
+public class SkiRecord {
     private int userId;
     private String title;
     private Location startLocation;
     private Location endLocation;
     private Date startTime;
     private Date endTime;
-
     private String path;
+
     private List<Location> locations = new ArrayList<Location>();
     List<LatLng> latLngs = new ArrayList<LatLng>();
 
@@ -94,6 +94,38 @@ public class Route {
         this.path = path;
     }
 
+    public double getDistance() {
+        double dist = 0;
+        double lat1 =  startLocation.getLatitude();
+        double lon1 =  startLocation.getLongitude();
+        double lat2 =  getEndLocation().getLatitude();
+        double lon2 = getEndLocation().getLongitude();
+        String unit = "N";
+        try {
+            double theta = lon1 - lon2;
+            dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+            dist = Math.acos(dist);
+            dist = rad2deg(dist);
+            dist = dist * 60 * 1.1515;
+            if (unit == "K") {
+                dist = dist * 1.609344;
+            } else if (unit == "N") {
+                dist = dist * 0.8684;
+            }
+        }catch(Exception e){
+
+        }
+        return (dist);
+    }
+
+    private double rad2deg(double rad) {
+        return (rad * 180 / Math.PI);
+    }
+
+    private static double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
     public List<Location> getLocations() {
         return locations;
     }
@@ -102,8 +134,4 @@ public class Route {
         this.locations = locations;
     }
 
-    // used to create json out of this model object for backend to consume.
-    public String toJson() {
-        return "";
-    }
 }

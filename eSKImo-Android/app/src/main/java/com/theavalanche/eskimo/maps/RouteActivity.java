@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.theavalanche.eskimo.R;
+import com.theavalanche.eskimo.models.SkiRecord;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -64,7 +65,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     protected String mLastUpdateTimeLabel;
     protected Boolean mRequestingLocationUpdates;
     protected String mLastUpdateTime;
-    private Route route;
+    private SkiRecord route;
     private GoogleMap googleMap;
     private Chronometer timer;
     private long elapsedTime;
@@ -92,7 +93,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         updateValuesFromBundle(savedInstanceState);
         buildGoogleApiClient();
         mExitUpdatesButton.setEnabled(true);
-        route = new Route();
+        route = new SkiRecord();
         //TODO:  add user info to route here.
 
     }
@@ -263,7 +264,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
-        route.addLocaiton(new com.theavalanche.eskimo.maps.Location(location));
+        route.addLocaiton(new com.theavalanche.eskimo.models.Location(location));
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         googleMap.addPolyline(new PolylineOptions()
                 .addAll(route.getLatLngs())
@@ -331,7 +332,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
                     .title("Start Location")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 17));
-            route.setStartLocation(new com.theavalanche.eskimo.maps.Location(loc));
+            route.setStartLocation(new com.theavalanche.eskimo.models.Location(loc));
         }
     }
 

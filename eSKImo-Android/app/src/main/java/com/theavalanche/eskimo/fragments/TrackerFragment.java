@@ -36,7 +36,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.theavalanche.eskimo.R;
-import com.theavalanche.eskimo.maps.Route;
+import com.theavalanche.eskimo.models.SkiRecord;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -69,11 +69,12 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
     protected String mLastUpdateTimeLabel;
     protected Boolean mRequestingLocationUpdates;
     protected String mLastUpdateTime;
-    private Route route;
+    private SkiRecord route;
     private GoogleMap googleMap;
     private Chronometer timer;
     private long elapsedTime;
     private SupportMapFragment mapFragment=null;
+    private Location startLocation;
 
     public TrackerFragment(){
 
@@ -116,7 +117,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
                             .title("Start Location")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 17));
-                    route.setStartLocation(new com.theavalanche.eskimo.maps.Location(loc));
+                    route.setStartLocation(new com.theavalanche.eskimo.models.Location(loc));
                 }
             }
         };
@@ -137,7 +138,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         updateValuesFromBundle(savedInstanceState);
         buildGoogleApiClient();
         mExitUpdatesButton.setEnabled(true);
-        route = new Route();
+        route = new SkiRecord();
         //TODO:  add user info to route here.
 
 
@@ -177,6 +178,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Saving route details", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -252,7 +254,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
             if (savedInstanceState.keySet().contains(LAST_UPDATED_TIME_STRING_KEY)) {
                 mLastUpdateTime = savedInstanceState.getString(LAST_UPDATED_TIME_STRING_KEY);
             }
-            updateUI();
+            updateUI(null);
         }
     }
 
@@ -292,9 +294,12 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    private void updateUI() {
+    private void updateUI(SkiRecord route) {
+        if(route == null) {
+         return;
+        }
         mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel,
-                mLastUpdateTime));
+                (Math.floor(route.getDistance() * 100) / 100)+" miles"));
     }
 
     protected void stopLocationUpdates() {
@@ -308,7 +313,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         if (mCurrentLocation == null) {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            updateUI();
+            updateUI(null);
         }
         if (mRequestingLocationUpdates) {
             startLocationUpdates();
@@ -318,7 +323,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
-        route.addLocaiton(new com.theavalanche.eskimo.maps.Location(location));
+        route.addLocaiton(new com.theavalanche.eskimo.models.Location(location));
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         googleMap.addPolyline(new PolylineOptions()
                 .addAll(route.getLatLngs())
@@ -344,7 +349,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
-        updateUI();
+        updateUI(route);
         Toast.makeText(getActivity(), getResources().getString(R.string.location_updated_message),
                 Toast.LENGTH_SHORT).show();
     }
@@ -386,7 +391,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
                     .title("Start Location")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 17));
-            route.setStartLocation(new com.theavalanche.eskimo.maps.Location(loc));
+            route.setStartLocation(new com.theavalanche.eskimo.models.Location(loc));
         }
     }
 
