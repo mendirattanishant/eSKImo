@@ -6,14 +6,16 @@ import com.theavalanche.eskimo.models.SkiRecord;
 import java.util.List;
 
 import retrofit.Call;
+import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
 /**
  * Created by Christopher on 12/1/2015.
  */
 public class SkiRecordRESTClient {
-    Retrofit retrofit = new Retrofit.Builder()
+    private Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://eskimo-cmpe277.rhcloud.com")
+            .addConverterFactory(GsonConverterFactory.create())
             .build();
 
     SkiRecordAPI service = retrofit.create(SkiRecordAPI.class);
@@ -21,12 +23,11 @@ public class SkiRecordRESTClient {
     public Call<SkiRecord> createSkiRecord(SkiRecord sk){
         return  service.createSkiRecord(
                 sk.getUserId(),
-                sk.getEventId(),
                 sk.getStartTime(),
                 sk.getEndTime(),
                 sk.getDistance(),
-                sk.getStartLocation(),
-                sk.getEndLocation(),
+                sk.getStartLocation().toJson(),
+                sk.getEndLocation().toJson(),
                 sk.getPath());
     }
 

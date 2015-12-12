@@ -29,7 +29,7 @@ public interface SkiRecordAPI {
             @Field("path") String path
     );
 
-    @GET("/getSkiRecordsByUserId/{user_id}")
+    @GET("/getSkiRecords/{user_id}")
     Call<List<SkiRecord>> getSkiRecordsByUserId(@Path("user_id") String user_id);
 
     @GET("/getSkiRecordsByEventId/{event_id}")

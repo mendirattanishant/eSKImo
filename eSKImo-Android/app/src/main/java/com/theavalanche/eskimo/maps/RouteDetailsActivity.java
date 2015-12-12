@@ -1,13 +1,12 @@
 package com.theavalanche.eskimo.maps;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,8 +18,15 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
 import com.theavalanche.eskimo.R;
+import com.theavalanche.eskimo.Session;
+import com.theavalanche.eskimo.info.api.SkiRecordRESTClient;
+import com.theavalanche.eskimo.models.SkiRecord;
 
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class RouteDetailsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -28,6 +34,11 @@ public class RouteDetailsActivity extends FragmentActivity implements OnMapReady
     protected TextView mSessionStopTimeTextView;
     protected TextView mSessionDurationTextView;
     protected Button mExitButton;
+    private SkiRecordRESTClient skiRecordRESTClient;
+    private List<SkiRecord> skiRecords;
+    protected static final String TAG = "RouteDetailsActivity";
+    GoogleMap gmap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,48 +56,78 @@ public class RouteDetailsActivity extends FragmentActivity implements OnMapReady
     }
 
     public void exitSessionButtonHandler(View view) {
-        Toast.makeText(this, "Goto profile details", Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(this,RouteActivity.class);
-        startActivity(i);
         finish();
     }
 
     @Override
     public void onMapReady(final GoogleMap map) {
-        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        List<LatLng> routePoints = PolyUtil.decode(getRouteData());
-        map.addPolyline(new PolylineOptions()
-                .addAll(routePoints)
-                .color(Color.RED)
-                .geodesic(true)
-                .width(6));
-
-        // check for wifi here else this will crash
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (LatLng marker : routePoints) {
-            builder.include(marker);
-        }
-        final LatLngBounds bounds = builder.build();
-        final int padding = 50;
-        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-
-            @Override
-            public void onCameraChange(CameraPosition arg0) {
-                // Move camera.
-                map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-                // Remove listener to prevent position reset on camera move.
-                map.setOnCameraChangeListener(null);
-            }
-        });
+        this.gmap = map;
+        refreshSkiRecords();
+        updateRouteDetails();
     }
 
     private void updateRouteDetails() {
-        mSessionStartTimeTextView.setText("session start location");
-        mSessionStopTimeTextView.setText("session stop location");
-        mSessionDurationTextView.setText("session duration");
+        //Need to be calculated from the history records
+        double distance = 0;
+        if(skiRecords ==  null){
+            return;
+        }
+        for(SkiRecord skiRecord: skiRecords){
+            distance+=skiRecord.getDistance();
+        }
+        mSessionStartTimeTextView.setText("Total Ski trips: "+skiRecords.size());
+        mSessionStopTimeTextView.setText("Total distance skied: "+Math.floor((distance* 100)/100) +"miles");
+        mSessionDurationTextView.setText("My Ski History");
     }
 
-    private String getRouteData(){
-        return "ktwnE|}ypUYd@i@fAlAfApAhAy@|BwAfE{BnG_ArCEh@Y`Au@vBGPIXwBlG}B~Gm@tAw@xBuAfEsDpKi@tA{AjEmAlDg@rAGj@@~A?fA?dBc@Ku@EyG?uBBwA@kE?{@DaB@uA@AnC?fE@pF@tN@vEIxAIx@YpAEv@?~D@|L@vNBhL@zK?nEAxAAjI?xEG`FBbI?tEAjE@jE@jBLfJDjGFdBCjAEp@Mt@yAnGyC`LuAbF[tAy@bDOdBIfC_AhOWfEu@|DkB~JyBbLw@dEC`B@`CAbDKpPWvZGhMGfDKdNe@bx@EhIArAMbBc@bEsAtN_@tGs@tMWzE[fFyA`Wi@jJHzBHvCDdD@rK@jLBdTC|Q?bFAlAvA?|RF`BJ@pD?tK@jEAlE?pE@|DH~BV`DZtCr@jDhBfInAhFpA~Fz@|Dr@nCVx@`AxBvErJdClFhB|D?LJBnB~D|@lBrG|M~CxGpEfJbCxE|@pBvD~HfBnDdBvDfChF`DzHfCzGh@zAr@dBjBdFvBbGvAvDxEfMrJvVhAvCBFd@vA`AbC`CbGpA~DdAzBhDzGhEvK~L`[lDbJd@tAd@nABb@O\\[fAgBrFtAn@`@d@NZPz@VxA\\tBX`BRf@JJRpBn@fFn@hFz@fGp@jE`@~B~BvM~AjJtBvLnCvOhAdGPv@XrA^jAzAlDr@xAvCrElF`HdHfJ`IdKX`@BTBL^p@`@n@Tf@f@`BJj@N|AJx@N\\NV@Lf@h@~AhCd@r@FJq@z@aCrCoEtFoDpEW^d@r@z@fAt@~@fA|AnAzAnBhC|BtCbAxAvCkD`EcF|CuDVYpDuExFaH`BoBj@[l@bAh@z@p@dAtC|EdCzDnArBbA|A{DrDeJvJgAlAgBlB}A`BETBXf@t@hAzADJcBlB{B`CKOa@m@SYtC}CDG";
+    private void refreshSkiRecords() {
+        skiRecordRESTClient = new SkiRecordRESTClient();
+        skiRecordRESTClient.getSkiRecordsByUserId(Session.loggedUser.getId()).enqueue(new Callback<List<SkiRecord>>() {
+            @Override
+            public void onResponse(Response<List<SkiRecord>> response, Retrofit retrofit) {
+                Log.d(TAG, "Successfully fetched Ski Record!");
+                skiRecords = response.body();
+
+                if(skiRecords != null && skiRecords.size() > 0) {
+                    gmap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                    for(SkiRecord skiRecord : skiRecords) {
+                        List<LatLng> routePoints = PolyUtil.decode(skiRecord.getPath());
+                        gmap.addPolyline(new PolylineOptions()
+                                .addAll(routePoints)
+                                .color(Color.RED)
+                                .geodesic(true)
+                                .width(6));
+
+
+                        // check for wifi here else this will crash
+                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                        for (LatLng marker : routePoints) {
+                            builder.include(marker);
+                        }
+
+
+                        final LatLngBounds bounds = builder.build();
+                        final int padding = 50;
+                        gmap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+
+                            @Override
+                            public void onCameraChange(CameraPosition arg0) {
+                                // Move camera.
+                                gmap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+                                // Remove listener to prevent position reset on camera move.
+                                gmap.setOnCameraChangeListener(null);
+                            }
+                        });
+                        updateRouteDetails();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+                Log.d(TAG, "Failed fetching Ski Record.");
+            }
+        });
     }
 }

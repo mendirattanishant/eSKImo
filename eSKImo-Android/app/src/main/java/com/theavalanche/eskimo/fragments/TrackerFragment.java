@@ -2,6 +2,7 @@ package com.theavalanche.eskimo.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -36,17 +37,24 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.theavalanche.eskimo.R;
+import com.theavalanche.eskimo.Session;
+import com.theavalanche.eskimo.info.api.SkiRecordRESTClient;
+import com.theavalanche.eskimo.maps.RouteDetailsActivity;
 import com.theavalanche.eskimo.models.SkiRecord;
 
 import java.text.DateFormat;
 import java.util.Date;
+
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    protected static final String TAG = "eskimo - route activity";
+    protected static final String TAG = "eskimoTrackerFragment";
 
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
 
@@ -74,12 +82,28 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
     private Chronometer timer;
     private long elapsedTime;
     private SupportMapFragment mapFragment=null;
-    private Location startLocation;
+    private SkiRecordRESTClient skiRecordRESTClient;
+    private String bestProvider;
+    private LocationManager locationManager;
+
 
     public TrackerFragment(){
 
     }
 
+    private static final String[] S = { "Out of Service",
+            "Temporarily Unavailable", "Available" };
+
+
+    /**
+     *
+     * http://stackoverflow.com/questions/25822202/google-api-null-pointer-by-getlastknownlocation
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tracker, container, false);
@@ -112,12 +136,14 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
                     Location loc = locManager.getLastKnownLocation(provider);
 
                     LatLng currentPosition = updateWithNewLocation(loc);
-                    Marker startLocation = googleMap.addMarker(new MarkerOptions()
-                            .position(currentPosition)
-                            .title("Start Location")
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 17));
-                    route.setStartLocation(new com.theavalanche.eskimo.models.Location(loc));
+                    if(currentPosition != null) {
+                        Marker startLocation = googleMap.addMarker(new MarkerOptions()
+                                .position(currentPosition)
+                                .title("Start Location")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 17));
+                        route.setStartLocation(new com.theavalanche.eskimo.models.Location(loc));
+                    }
                 }
             }
         };
@@ -150,7 +176,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
                     setButtonsEnabledState();
                     startLocationUpdates();
                     // this should be set only once and not on restart after pause.
-                    if(route.getStartTime() == null) {
+                    if (route.getStartTime() == null) {
                         route.setStartTime(new Date());
                     }
                     timer.setBase(SystemClock.elapsedRealtime() + elapsedTime);
@@ -177,22 +203,33 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         mSaveUpdatesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Saving route details", Toast.LENGTH_SHORT).show();
 
-            }
-        });
-
-        mExitUpdatesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-//                        Intent i = new Intent(RouteActivity.this,RouteDetailsActivity.class);
-//                        startActivity(i);
-//                        finish();
+                                Toast.makeText(getActivity(), "Saving route details", Toast.LENGTH_SHORT).show();
+                                skiRecordRESTClient = new SkiRecordRESTClient();
+                                route.setTitle("My Route");
+                                route.setUserId(Integer.parseInt(Session.loggedUser.getId()));
+                                skiRecordRESTClient.createSkiRecord(route).enqueue(new Callback<SkiRecord>() {
+                                    @Override
+                                    public void onResponse(Response<SkiRecord> response, Retrofit retrofit) {
+                                        Log.d(TAG, "Successfully created Ski Record!");
+                                    }
+
+                                    @Override
+                                    public void onFailure(Throwable t) {
+                                        t.printStackTrace();
+                                        Log.d(TAG, "Failed creating Ski Record.");
+                                    }
+                                });
+
+
+                                mRequestingLocationUpdates = false;
+                                setButtonsEnabledState();
+                                timer.stop();
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -203,8 +240,21 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
+                builder.setMessage("Seems you are in an active ski session!").setPositiveButton("End and Save current ski session", dialogClickListener)
+                        .setNegativeButton("Continue without saving", dialogClickListener).show();
+
+            }
+
+        });
+
+
+
+
+        mExitUpdatesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(),RouteDetailsActivity.class);
+                startActivity(i);
             }
         });
         return view;
@@ -222,6 +272,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
             startLocationUpdates();
         }
+//        locationManager.requestLocationUpdates(bestProvider, 20000, 1, this);
     }
 
     @Override
@@ -254,6 +305,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
             if (savedInstanceState.keySet().contains(LAST_UPDATED_TIME_STRING_KEY)) {
                 mLastUpdateTime = savedInstanceState.getString(LAST_UPDATED_TIME_STRING_KEY);
             }
+
             updateUI(null);
         }
     }
@@ -299,7 +351,7 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
          return;
         }
         mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel,
-                (Math.floor(route.getDistance() * 100) / 100)+" miles"));
+                (Math.floor(route.getDistance() * 100) / 100) + " miles"));
     }
 
     protected void stopLocationUpdates() {
@@ -313,7 +365,8 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         if (mCurrentLocation == null) {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            updateUI(null);
+            route.setStartLocation(new com.theavalanche.eskimo.models.Location(mCurrentLocation));
+            updateUI(route);
         }
         if (mRequestingLocationUpdates) {
             startLocationUpdates();
@@ -409,4 +462,5 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         }
         return currentLocation;
     }
+
 }

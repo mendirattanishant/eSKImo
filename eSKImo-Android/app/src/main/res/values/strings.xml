@@ -14,8 +14,8 @@
     <string name="start_updates">Start</string>
     <string name="stop_updates">Pause</string>
     <string name="save_updates">Save</string>
-    <string name="exit_updates">Exit</string>
-    <string name="exit_session_details">Exit</string>
+    <string name="exit_updates">My Ski History</string>
+    <string name="exit_session_details">Back to Tracker</string>
     <string name="location_updated_message">Location updated</string>
     <string name="title_activity_route_details">Route Details</string>
     <string name="title_activity_route_group">Route Group</string>

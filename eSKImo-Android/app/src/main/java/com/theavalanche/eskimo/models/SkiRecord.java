@@ -48,6 +48,10 @@ public class SkiRecord {
     }
 
     public Location getStartLocation() {
+        if(path != null) {
+            List<LatLng> latLngs = PolyUtil.decode(getPath());
+            return new Location(latLngs.get(0).latitude,latLngs.get(0).longitude,0);
+        }
         return startLocation;
     }
 
@@ -60,6 +64,10 @@ public class SkiRecord {
     }
 
     public Location getEndLocation() {
+        if(path !=null){
+            List<LatLng> latLngs = PolyUtil.decode(getPath());
+            return new Location(latLngs.get(latLngs.size()-1).latitude,latLngs.get(latLngs.size()-1).longitude,0);
+        }
         if(locations == null || locations.size()<=0){
             return null;
         }
@@ -96,8 +104,8 @@ public class SkiRecord {
 
     public double getDistance() {
         double dist = 0;
-        double lat1 =  startLocation.getLatitude();
-        double lon1 =  startLocation.getLongitude();
+        double lat1 =  getStartLocation().getLatitude();
+        double lon1 =  getStartLocation().getLongitude();
         double lat2 =  getEndLocation().getLatitude();
         double lon2 = getEndLocation().getLongitude();
         String unit = "N";
