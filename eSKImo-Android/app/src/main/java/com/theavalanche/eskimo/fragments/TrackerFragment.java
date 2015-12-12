@@ -165,8 +165,6 @@ public class TrackerFragment extends Fragment implements OnMapReadyCallback,
         buildGoogleApiClient();
         mExitUpdatesButton.setEnabled(true);
         route = new SkiRecord();
-        //TODO:  add user info to route here.
-
 
         mStartUpdatesButton.setOnClickListener(new View.OnClickListener() {
             @Override

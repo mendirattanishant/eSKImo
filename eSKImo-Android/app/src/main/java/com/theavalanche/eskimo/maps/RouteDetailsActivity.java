@@ -118,8 +118,8 @@ public class RouteDetailsActivity extends FragmentActivity implements OnMapReady
                                 gmap.setOnCameraChangeListener(null);
                             }
                         });
-                        updateRouteDetails();
                     }
+                    updateRouteDetails();
                 }
             }
 
